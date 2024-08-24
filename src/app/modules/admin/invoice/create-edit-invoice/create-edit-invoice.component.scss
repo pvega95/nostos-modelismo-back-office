@@ -1,0 +1,21 @@
+.inventory-grid-create-edit {
+    grid-template-columns: 48px auto 40px;
+
+    @screen sm {
+        grid-template-columns: 48px auto 112px 72px;
+    }
+
+    @screen md {
+        grid-template-columns: repeat(9, 1fr);
+        
+    }
+
+    @screen lg {
+        grid-template-columns: repeat(9, 1fr);
+    }
+}
+
+.w-footer {
+    max-width: calc(100% - 280px);
+    width: 100%;
+}

@@ -1,0 +1,30 @@
+.products {
+    & .title {
+        font-size: 36px;
+        font-weight: 700;
+    }
+}
+
+:host ::ng-deep {
+    table {
+        &.mat-table {
+            tbody {
+                background-color: white;
+            }
+        }
+    }
+}
+
+::ng-deep .my-custom-dialog-class {
+    mat-dialog-container {
+        padding: 0;
+        width: 100vw;
+        max-width: 1152px;
+    }
+}
+.editIcon:hover{
+    color: blue !important;
+}
+.deleteIcon:hover{
+    color: red !important;
+}

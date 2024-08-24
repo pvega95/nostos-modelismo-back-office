@@ -1,0 +1,64 @@
+<ng-container>
+    <div
+        class="flex flex-col w-96 p-6 bg-white border rounded-lg border-gray-200"
+    >
+        <div class="relative flex-row flex-0 mx-2 p-0">
+            <div class="relative flex flex-0">
+                <div class="w-9/12">
+                    <span>Total valor de venta bruto</span>
+                </div>
+                <div class="w-3/12">
+                    <span>S/. {{ totalGrossNC | number: "1.2-2" }}</span>
+                </div>
+            </div>
+            <div class="relative flex flex-0">
+                <div class="w-9/12">
+                    <span>Total de descuentos</span>
+                </div>
+                <div class="w-3/12">
+                    <span>S/. {{ totalDiscountNC | number: "1.2-2" }}</span>
+                </div>
+            </div>
+            <div class="relative flex flex-0">
+                <div class="w-9/12">
+                    <span>Total Valor de venta Op.Gravadas</span>
+                </div>
+                <div class="w-3/12">
+                    <span
+                        >S/. {{ totalOperationGravNC | number: "1.2-2" }}</span
+                    >
+                </div>
+            </div>
+
+            <div class="relative flex flex-0">
+                <div class="w-9/12">
+                    <span>Total Valor de venta Op.Exoneradas</span>
+                </div>
+                <div class="w-3/12">
+                    <span
+                        >S/. {{ totalOperationExonNC | number: "1.2-2" }}</span
+                    >
+                </div>
+            </div>
+
+            <div class="relative flex flex-0">
+                <div class="w-9/12">
+                    <span>Sumatoria IGV</span>
+                </div>
+                <div class="w-3/12">
+                    <span>S/. {{ totalIGV | number: "1.2-2" }}</span>
+                </div>
+            </div>
+            <div class="relative flex flex-0">
+                <div class="w-9/12">
+                    <span><b>Importe Total</b></span>
+                </div>
+                <div class="w-3/12">
+                    <span
+                        ><b>S/. {{ totalAmountNC | number: "1.2-2" }}</b></span
+                    >
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-container>

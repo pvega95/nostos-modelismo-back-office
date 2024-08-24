@@ -1,0 +1,327 @@
+<ng-container *ngIf="data.type === typeModal.imagesUploader">
+    <div class="relative flex flex-col  -m-6">
+            <!-- boton X -->
+            <div class="absolute top-0 right-0 pt-1 pr-4">
+                <button
+                    mat-icon-button
+                    [matDialogClose]="undefined">
+                    <mat-icon
+                        class="text-secondary"
+                        [svgIcon]="'heroicons_outline:x'"></mat-icon>
+                </button>
+            </div>
+            <!-- insertar imagen -->
+            <div class="row" style="margin-top: 1.4rem;">
+                <div >
+                    <app-file-uploader  (filesLoaded)="getFilesLoades($event)" ></app-file-uploader>
+                </div> 
+                <div class="flex justify-center items-center my-2">
+                        <button
+                            mat-flat-button
+                            [disabled]= "!existListFile"
+                            [color]="'primary'"
+                            (click)="imagenesCargadas()">
+                            Hecho
+                        </button>
+                </div>
+            </div>
+    </div>
+</ng-container>
+
+<ng-container *ngIf="data.type === typeModal.loading">
+    <mat-spinner></mat-spinner>
+</ng-container>
+
+<ng-container *ngIf="data.type === typeModal.success">
+    <div>
+        <p>exito</p>
+
+    </div>
+
+</ng-container>
+<ng-container *ngIf="data.type === typeModal.newOrder">
+    <div class="relative flex flex-col  -m-6">
+            <!-- boton X -->
+            <div class="absolute top-0 right-0 pt-1 pr-4">
+                <button
+                    mat-icon-button
+                    [matDialogClose]="undefined">
+                    <mat-icon
+                        class="text-secondary"
+                        [svgIcon]="'heroicons_outline:x'"></mat-icon>
+                </button>
+            </div>
+            <!-- body -->
+            <div class="mt-4 px-5">
+                <div class="text-2xl font-extrabold tracking-tight text-center">
+                    <span>Nueva orden</span> 
+                </div>
+                <div   class="relative flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between py-1 px-6 md:px-6 ">
+                    <div class="absolute inset-x-0 top-0 px-9"
+                        *ngIf="isLoading"> 
+                        <mat-progress-bar [mode]="'indeterminate'"></mat-progress-bar>
+                    </div>
+                    <cdk-virtual-scroll-viewport  itemSize="10"  class="w-full  example-viewport " [formGroup]="orderForm">
+                        <div class="relative flex sm:flex-row flex-0 mx-3">  <!-- flex flex-auto overflow-hidden -->
+                            <div class=" w-3/5">
+                                <app-select-search *ngIf="clients.length > 0" [listObj] = "listObjClient" 
+                                    [placeholder]="'cliente'" [placeholderLabel]="'Buscar cliente'" 
+                                    [noEntriesFoundLabel]="'cliente no encontrado'" (objSelectedOut)="objClientSelected($event)" 
+                                    (listObjAvailable)="listClientAvailable($event)"
+                                    >
+                                </app-select-search> 
+                            </div>
+                            <div *ngIf="!clientAvailableSearch" class=" w-2/5"> <!--  -->
+                                <button class="  ml-3"
+                                    mat-flat-button
+                                    [color]="'primary'"
+                                    (click)="goToClient()">
+                                    Agregar nuevo cliente
+                                </button>
+                            </div>
+                        </div>
+                        <div *ngIf="listObjAddressClient.length > 0; else messageAddress" class="relative flex-row flex-0 mx-3">
+                            <div class="w-full">
+                                <app-select-search  [listObj] = "listObjAddressClient" 
+                                    [placeholder]="'dirección'" [placeholderLabel]="'Buscar dirección'" 
+                                    [noEntriesFoundLabel]="'Dirección no encontrada'" (objSelectedOut)="objAddressSelected($event)" 
+                                    
+                                    >
+                                </app-select-search> 
+                            </div>
+                            <div class="mb-4">
+                                <button class="  ml-3"
+                                    mat-flat-button
+                                    [color]="'primary'"
+                                    (click)="goToClient(this.orderForm.controls.clientSelected.value)">
+                                    Agregar dirección cliente
+                                </button>
+                            </div>
+                        </div>
+                        <ng-template   #messageAddress >
+                            <div *ngIf="isLoadingAddressClient " class="relative flex-row flex-0 mx-3 mb-2">
+                                <p>Cargando dirección cliente</p>
+                            </div>
+                            <div *ngIf="!isLoadingAddressClient && listObjAddressClient.length === 0 && this.orderForm.controls.clientSelected.value != null " class="relative flex mx-3 mb-2  flex-wrap  justify-center">
+                               <div class="flex items-center">
+                                <p class="my-0">No hay dirección cliente</p>
+                               </div>
+                               <div>
+                                   <button class="  ml-3"
+                                       mat-flat-button
+                                       [color]="'primary'"
+                                       (click)="goToClient(this.orderForm.controls.clientSelected.value)">
+                                       Agregar dirección cliente
+                                   </button>
+                               </div>
+                            </div>
+                        </ng-template>
+                        
+                        <div *ngFor="let item of productsControls; let i = index " formArrayName ="products" class="relative flex-row flex-0 ">
+                            <div class="relative flex-row flex-0 mx-3">
+                                <div class="w-full">
+                                    <app-select-search *ngIf="products.length > 0" [listObj] = "listObjProduct" 
+                                        [placeholder]="'producto'" [placeholderLabel]="'Buscar producto'" 
+                                        [noEntriesFoundLabel]="'producto no encontrado'" (objSelectedOut)="objProductSelected($event, i)" 
+                                        (listObjAvailable)="listProductAvailable($event)"
+                                        >
+                                    </app-select-search> 
+                                </div>
+                            </div>
+                            <div  class="relative flex sm:flex-row flex-0  mx-3"> <!--  -->
+                               
+                                    <div class="w-3/12 mr-1">
+                                        <mat-form-field appearance="outline" style="width: 100%;" >
+                                            <mat-label>Precio</mat-label>
+                                            <span matPrefix>S/.</span>
+                                            <input
+                                                readonly
+                                                matInput
+                                                placeholder="Precio"
+                                                [formControl]="productsControls[i].controls.price">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="w-3/12 mx-1">
+                                        <mat-form-field appearance="outline" style="width: 100%;" >
+                                            <mat-label>Cantidad</mat-label>
+                                            <input
+                                                matInput
+                                                type="number"
+                                                placeholder="Cantidad"
+                                                [formControl]="productsControls[i].controls.quantity">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="w-6/12 mx-1 mt-6">
+                                        <p>Subtotal S/. {{this.productsControls[i].controls.quantity.value * this.productsControls[i].controls.price.value | number:'1.2-2'}} </p>
+                                    </div>
+                               
+                            </div>
+                        </div>
+                        <div *ngIf="clients.length > 0" class="relative flex flex-wrap sm:flex-row flex-0 justify-center">
+                            <button class="  mx-3"
+                                mat-flat-button
+                                [color]="'primary'"
+                                (click)="addProduct()">
+                                Agregar más productos
+                            </button>       
+                            <button class="  mx-3"
+                                [disabled] = "disableRemoveProduct"
+                                mat-flat-button
+                                [color]="'warn'"
+                                (click)="removeProduct()">
+                                Quitar producto
+                            </button>                   
+                        </div>
+                    </cdk-virtual-scroll-viewport>
+                </div>
+          <!--       <div class="relative flex sm:flex-row flex-0 mx-6 mt-2">
+                    {{orderForm.value | json }}
+                    <br>
+                    {{orderForm.invalid }}
+                </div> -->
+                <div class="relative flex sm:flex-row flex-0 mx-6 mt-2">
+                    <div class="flex justify-between items-center w-full ">
+                        <div>
+                            <p class="text-2xl font-extrabold tracking-tight">Total: S/. {{totalAmount | number:'1.2-2'}} </p>
+                        </div>
+                        <div>
+
+                            <button class="  mx-3"
+                                [disabled]= "orderForm.invalid"
+                                mat-flat-button
+                                [color]="'primary'"
+                                (click)="createNewOrder()">
+                                Crear nueva orden
+                            </button>   
+                        </div>
+                    </div>
+                </div>  
+                <div *ngIf="success" class="relative flex sm:flex-row flex-0 mx-6 my-1 justify-center items-center">
+                    <mat-icon
+                    class="text-green-400 icon-size-5"
+                    [svgIcon]="'heroicons_solid:check'"></mat-icon>
+                    <p>Orden creada con éxito</p>
+                </div>               
+               
+            </div>
+    </div>
+</ng-container>
+<ng-container *ngIf="data.type === typeModal.newItem">
+    <div class="relative flex flex-col  -m-6">
+            <!-- boton X -->
+            <div class="absolute top-0 right-0 pt-1 pr-4">
+                <button
+                    mat-icon-button
+                    [matDialogClose]="undefined">
+                    <mat-icon
+                        class="text-secondary"
+                        [svgIcon]="'heroicons_outline:x'"></mat-icon>
+                </button>
+            </div>
+            <!-- body -->
+            <div class="mt-4 px-5">
+                <div class="text-2xl font-extrabold tracking-tight text-center">
+                    <span>Agregar Ítems</span> 
+                </div>
+                <div   class="relative flex-row sm:flex-row flex-0 sm:items-center sm:justify-between py-1 px-0 md:px-0 ">
+                    <div class="absolute inset-x-0 top-0 px-9"
+                        *ngIf="isLoading"> 
+                        <mat-progress-bar [mode]="'indeterminate'"></mat-progress-bar>
+                    </div>
+                    <ng-container *ngIf="!isLoading">
+                        <div class="relative flex flex-0 ">
+                            <!-- <cdk-virtual-scroll-viewport  itemSize="10"  class="w-full  example-viewport " [formGroup]="orderForm"> -->
+                                <div class="flex flex-col w-full"> 
+                                    <div class="relative flex-row flex-0 mx-2 px-0 pt-0 pb-2">
+                                        <div class="relative flex flex-0 ">
+                                            <mat-form-field class="" appearance="standard" style="width: 100%;">
+                                                <mat-label>Buscar item</mat-label>
+                                                <input matInput (keyup)="applyFilterItem($event)" placeholder="sku, nombre de item, precio" #input>
+                                              </mat-form-field>
+                                        </div>
+                                        <div class="relative flex flex-0 ">
+                                            <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" >
+                                                <ng-container matColumnDef="select">
+                                                    <th mat-header-cell *matHeaderCellDef>
+                                                      <mat-checkbox (change)="$event ? masterToggle() : null"
+                                                                    [checked]="hasValue() && isAllSelected()"
+                                                                    [indeterminate]="hasValue() && !isAllSelected()"
+                                                                    >
+                                                      </mat-checkbox>
+                                                    </th>
+                                                    <td mat-cell *matCellDef="let element" [ngClass]="{'itemSelected': element.selected === true}">
+                                                      <mat-checkbox (click)="$event.stopPropagation()"
+                                                                    (change)="$event ? toggleItem(element) : null"
+                                                                    [checked]="element.selected || element.checked"
+                                                                    [disabled]="element.selected"
+                                                                    >
+                                                      </mat-checkbox>
+                                                    </td>
+                                                  </ng-container>
+                                                  
+                                                <!-- Position Column -->
+                                                <ng-container matColumnDef="sku">
+                                                <th mat-header-cell *matHeaderCellDef> SKU </th>
+                                                <td mat-cell *matCellDef="let element" [ngClass]="{'itemSelected': element.selected === true}"> {{element.sku}}</td>
+                                                </ng-container>
+                                            
+                                                <!-- Name Column -->
+                                                <ng-container matColumnDef="name">
+                                                <th mat-header-cell *matHeaderCellDef> Nombre </th>
+                                                <td mat-cell *matCellDef="let element" [ngClass]="{'itemSelected': element.selected === true}"> 
+                                                   <span matTooltip="{{element.selected ? '' : element.name}}">{{element.name}}</span> 
+                                                </td>
+                                                </ng-container>
+                                            
+                                                <!--  Column -->
+                                                <ng-container matColumnDef="listprice">
+                                                <th mat-header-cell *matHeaderCellDef> Precio neto (S/.) </th>
+                                                <td mat-cell *matCellDef="let element" [ngClass]="{'itemSelected': element.selected === true}"> {{element.listprice | number:'1.2-2'}} </td>
+                                                </ng-container>
+                                                <!-- <ng-container matColumnDef="check">
+                                                    <th mat-header-cell *matHeaderCellDef>  </th>
+                                                    <td mat-cell *matCellDef="let element" [ngClass]="{'itemSelected': element.selected === true}">  
+                                                        <mat-checkbox 
+                                                        [disabled]="element.selected"
+                                                        [checked]="element.selected"
+                                                        (change)="itemSelected($event, element.sku)">
+                                                        </mat-checkbox>
+                                                    </td>
+                                                </ng-container> -->
+                                           
+                                                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                                <tr mat-row *matRowDef="let row; columns: displayedColumns;" ></tr>
+                                            </table>
+                                        </div>
+                                        <div class="relative flex flex-0 ">
+    
+                                        </div>
+    
+                                    </div>
+    
+                                </div>
+    
+                            <!-- </cdk-virtual-scroll-viewport> -->
+                        </div>
+                        <div class="relative flex flex-0 " >
+                            <mat-paginator class="flex justify-end " [length]="metadataTotal" [pageSize]="pageSize" 
+                            [pageSizeOptions]="[10]" (page)="changePage($event)"
+                            aria-label="">
+                            </mat-paginator> 
+                        </div>
+                        <div class="relative flex flex-0 justify-center mb-2">
+                            <button class="  mx-3"
+                                mat-flat-button
+                                [color]="'primary'"
+                                (click)="addItem()">
+                                Agregar a la lista
+                            </button>       
+                        </div>
+                    </ng-container>
+                    
+         
+                </div>             
+               
+            </div>
+    </div>
+</ng-container>

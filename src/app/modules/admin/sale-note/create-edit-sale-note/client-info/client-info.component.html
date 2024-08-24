@@ -1,0 +1,138 @@
+<div class="flex flex-col w-full">
+    <ng-container>
+
+        <!-- Header -->
+        <div class="relative w-full h-40 sm:h-48 px-8 sm:px-12 bg-accent-100 dark:bg-accent-700">
+            <!-- Background -->
+            <ng-container *ngIf="contact?.background">
+                <img
+                    class="absolute inset-0 object-cover w-full h-full"
+                    [src]="contact.background">
+            </ng-container>
+            <!-- Close button -->
+            <div class="flex items-center justify-end w-full max-w-3xl mx-auto pt-6">
+                <button
+                    mat-icon-button
+                    [matTooltip]="'Close'"
+                    [routerLink]="['../']">
+                    <mat-icon
+                        class="text-white"
+                        [svgIcon]="'heroicons_outline:x'"></mat-icon>
+                </button>
+            </div>
+        </div>
+
+        <!-- Contact -->
+        <div class="relative flex flex-col flex-auto items-center p-6 pt-0 sm:p-12 sm:pt-0">
+            <div class="w-full max-w-3xl">
+
+                <!-- Avatar and actions -->
+                <div class="flex flex-auto items-end -mt-16">
+                    <!-- Avatar -->
+                    <div class="flex items-center justify-center w-32 h-32 rounded-full overflow-hidden ring-4 ring-bg-card">
+                        <img
+                            class="object-cover w-full h-full"
+                            *ngIf="contact?.avatar"
+                            [src]="contact?.avatar">
+                        <div
+                            class="flex items-center justify-center w-full h-full rounded overflow-hidden uppercase text-8xl font-bold leading-none bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-200"
+                            *ngIf="!contact?.avatar">
+                            {{contact?.comercialName.charAt(0)}}
+                        </div>
+                    </div>
+                    <!-- Actions -->
+                    <div class="flex items-center ml-auto mb-1">
+                        <button
+                            mat-stroked-button
+                            (click)="toggleEditMode(true)">
+                            <mat-icon
+                                class="icon-size-5"
+                                [svgIcon]="'heroicons_solid:pencil-alt'"></mat-icon>
+                            <span class="ml-2">Edit</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Name -->
+                <div class="mt-3 text-4xl font-bold truncate">{{contact?.comercialName}}</div>
+
+
+                <div class="flex flex-col mt-4 pt-6 border-t space-y-8">
+                    <!-- Identification -->
+                    <ng-container *ngIf="contact?.typeDocument && contact?.numberDocument">
+                        <div class="flex sm:items-center">
+                            <mat-icon [svgIcon]="'heroicons_outline:identification'"></mat-icon>
+                            <!-- <div
+                            class="hidden sm:flex w-6 h-4 overflow-hidden">
+                                {{contact.typeDocument}}
+                            </div> -->
+                            <div class="ml-6 leading-6">{{contact?.numberDocument}}</div>
+                        </div>
+                    </ng-container>
+
+                    <!-- Company -->
+                    <!-- <ng-container *ngIf="contact?.company">
+                        <div class="flex sm:items-center">
+                            <mat-icon [svgIcon]="'heroicons_outline:office-building'"></mat-icon>
+                            <div class="ml-6 leading-6">{{contact?.company}}</div>
+                        </div>
+                    </ng-container> -->
+
+                    <!-- Emails -->
+                    <ng-container *ngIf="contact?.email">
+                        <div class="flex">
+                            <mat-icon [svgIcon]="'heroicons_outline:mail'"></mat-icon>
+                            <div class="min-w-0 ml-6 space-y-1">
+                                <ng-container>
+                                    <div class="flex items-center leading-6">
+                                        <a
+                                            class="hover:underline text-primary-500"
+                                            [href]="'mailto:' + contact.email"
+                                            target="_blank">
+                                            {{ contact.email}}
+                                        </a>
+                                        <div
+                                            class="text-md truncate text-secondary"
+                                            >
+                                            <span class="mx-2">&bull;</span>
+                                            <span class="font-medium">Personal</span>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                            </div>
+                        </div>
+                    </ng-container>
+
+                    <!-- Phone -->
+                    <ng-container *ngIf="contact?.phone">
+                        <div class="flex">
+                            <mat-icon [svgIcon]="'heroicons_outline:phone'"></mat-icon>
+                            <div class="min-w-0 ml-6 space-y-1">
+                                <ng-container>
+                                    <div class="flex items-center leading-6">
+                                        <div class="font-mono">{{contact.phone}}</div>
+                                        <div
+                                            class="text-md truncate text-secondary">
+                                            <span class="mx-2">&bull;</span>
+                                            <span class="font-medium">Mobile</span>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                            </div>
+                        </div>
+                    </ng-container>
+
+                    <!-- Address -->
+                    <ng-container *ngIf="delivery && delivery.address">
+                        <div class="flex sm:items-center">
+                            <mat-icon [svgIcon]="'heroicons_outline:location-marker'"></mat-icon>
+                            <div class="ml-6 leading-6">{{delivery.address.address }}</div>
+                        </div>
+                    </ng-container>
+
+                </div>
+
+            </div>
+        </div>
+    </ng-container>
+</div>

@@ -1,0 +1,29 @@
+.inventory-grid {
+    grid-template-columns: 48px auto 40px;
+
+    @screen sm {
+        grid-template-columns: 48px auto 112px 72px;
+    }
+
+    @screen md {
+        grid-template-columns: 7rem 7rem 8rem 5rem 9rem 12rem 5rem;
+    }
+
+    @screen lg {
+        grid-template-columns:  7rem 7rem 8rem 5rem 9rem 12rem 5rem;
+    }
+}
+
+.colorStadoCreado{
+    background-color: green;
+    color: white;
+    border-radius: 2rem;
+}
+.colorStadoCancelado{
+    background-color: #6d6d6d;
+    color: white;
+    border-radius: 2rem;
+}
+.ancho-select{
+    width: 9rem;
+}

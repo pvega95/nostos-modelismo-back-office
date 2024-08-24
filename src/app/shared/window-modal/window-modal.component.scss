@@ -1,0 +1,37 @@
+.example-viewport {
+    height: 23.2rem;
+    width: 100%;
+   // border: 1px solid black;
+  }
+
+ ::ng-deep   .mat-form-field-appearance-outline .mat-form-field-prefix{
+        top: 0em !important;
+    }
+table {
+    width: 100%;
+    }
+.mat-column-select {
+    text-align: center;
+    width: 9% !important;
+}
+.mat-column-sku {
+    width: 16% !important;
+}
+.mat-column-name {
+    width: 50% !important;
+}
+.mat-column-listprice {
+    text-align: right;
+    width: 25% !important;
+}
+
+
+.itemSelected{
+    background-color: #cdcdcd59 !important;
+    color: #b5b5b5a8 !important;
+}
+.searchItem{
+    ::ng-deep .mat-form-field-wrapper {
+        padding-bottom: 0.9rem;
+    }
+}
