@@ -1,19 +1,21 @@
 /* Variables */
-$fuse-vertical-navigation-thin-width: 80;
+:root {
+    --fuse-vertical-navigation-thin-width: 80px;
+}
 
 fuse-vertical-navigation {
-
     /* Thin appearance overrides */
     &.fuse-vertical-navigation-appearance-thin {
-        width: #{$fuse-vertical-navigation-thin-width}px;
-        min-width: #{$fuse-vertical-navigation-thin-width}px;
-        max-width: #{$fuse-vertical-navigation-thin-width}px;
+        width: var(--fuse-vertical-navigation-thin-width);
+        min-width: var(--fuse-vertical-navigation-thin-width);
+        max-width: var(--fuse-vertical-navigation-thin-width);
 
         /* Left positioned */
         &.fuse-vertical-navigation-position-left {
-
             &.fuse-vertical-navigation-mode-side {
-                margin-left: -#{$fuse-vertical-navigation-thin-width}px;
+                margin-left: calc(
+                    var(--fuse-vertical-navigation-thin-width) * -1
+                );
             }
 
             &.fuse-vertical-navigation-opened {
@@ -23,9 +25,10 @@ fuse-vertical-navigation {
 
         /* Right positioned */
         &.fuse-vertical-navigation-position-right {
-
             &.fuse-vertical-navigation-mode-side {
-                margin-right: -#{$fuse-vertical-navigation-thin-width}px;
+                margin-right: calc(
+                    var(--fuse-vertical-navigation-thin-width) * -1
+                );
             }
 
             &.fuse-vertical-navigation-opened {
@@ -34,16 +37,14 @@ fuse-vertical-navigation {
 
             .fuse-vertical-navigation-aside-wrapper {
                 left: auto;
-                right: #{$fuse-vertical-navigation-thin-width}px;
+                right: var(--fuse-vertical-navigation-thin-width);
             }
         }
 
         /* Wrapper */
         .fuse-vertical-navigation-wrapper {
-
             /* Content */
             .fuse-vertical-navigation-content {
-
                 > fuse-vertical-navigation-aside-item,
                 > fuse-vertical-navigation-basic-item {
                     flex-direction: column;
@@ -77,13 +78,12 @@ fuse-vertical-navigation {
                 }
 
                 > fuse-vertical-navigation-collapsable-item {
-                    display: none
+                    display: none;
                 }
 
                 > fuse-vertical-navigation-group-item {
-
                     > .fuse-vertical-navigation-item-wrapper {
-                        display: none
+                        display: none;
                     }
                 }
             }
@@ -91,7 +91,7 @@ fuse-vertical-navigation {
 
         /* Aside wrapper */
         .fuse-vertical-navigation-aside-wrapper {
-            left: #{$fuse-vertical-navigation-thin-width}px;
+            left: var(--fuse-vertical-navigation-thin-width);
         }
     }
 }

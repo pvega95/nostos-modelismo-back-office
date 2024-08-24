@@ -1,2 +1,0 @@
-export const CURRENCY = ['SOLES', 'DOLARES'];
-export const TYPE_ACCOUNT = ['CUENTA DE AHORRO', 'CUENTA CORRIENTE'];

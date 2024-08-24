@@ -1,5 +1,7 @@
 /* Variables */
-$fuse-vertical-navigation-width: 280;
+:root {
+    --fuse-vertical-navigation-width: 280px;
+}
 
 fuse-vertical-navigation {
     position: sticky;
@@ -7,9 +9,9 @@ fuse-vertical-navigation {
     flex-direction: column;
     flex: 1 0 auto;
     top: 0;
-    width: #{$fuse-vertical-navigation-width}px;
-    min-width: #{$fuse-vertical-navigation-width}px;
-    max-width: #{$fuse-vertical-navigation-width}px;
+    width: var(--fuse-vertical-navigation-width);
+    min-width: var(--fuse-vertical-navigation-width);
+    max-width: var(--fuse-vertical-navigation-width);
     height: 100vh;
     min-height: 100vh;
     max-height: 100vh;
@@ -23,7 +25,8 @@ fuse-vertical-navigation {
     &.fuse-vertical-navigation-animations-enabled {
         transition-duration: 400ms;
         transition-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
-        transition-property: visibility, margin-left, margin-right, transform, width, max-width, min-width;
+        transition-property: visibility, margin-left, margin-right, transform,
+            width, max-width, min-width;
 
         /* Wrapper */
         .fuse-vertical-navigation-wrapper {
@@ -42,10 +45,9 @@ fuse-vertical-navigation {
 
     /* Left position */
     &.fuse-vertical-navigation-position-left {
-
         /* Side mode */
         &.fuse-vertical-navigation-mode-side {
-            margin-left: -#{$fuse-vertical-navigation-width}px;
+            margin-left: calc(#{var(--fuse-vertical-navigation-width)} * -1);
 
             &.fuse-vertical-navigation-opened {
                 margin-left: 0;
@@ -70,10 +72,9 @@ fuse-vertical-navigation {
 
     /* Right position */
     &.fuse-vertical-navigation-position-right {
-
         /* Side mode */
         &.fuse-vertical-navigation-mode-side {
-            margin-right: -#{$fuse-vertical-navigation-width}px;
+            margin-right: calc(var(--fuse-vertical-navigation-width) * -1);
 
             &.fuse-vertical-navigation-opened {
                 margin-right: 0;
@@ -135,7 +136,6 @@ fuse-vertical-navigation {
 
         /* Header */
         .fuse-vertical-navigation-header {
-
         }
 
         /* Content */
@@ -158,7 +158,6 @@ fuse-vertical-navigation {
 
         /* Footer */
         .fuse-vertical-navigation-footer {
-
         }
     }
 
@@ -170,8 +169,8 @@ fuse-vertical-navigation {
         flex-direction: column;
         top: 0;
         bottom: 0;
-        left: #{$fuse-vertical-navigation-width}px;
-        width: #{$fuse-vertical-navigation-width}px;
+        left: var(--fuse-vertical-navigation-width);
+        width: var(--fuse-vertical-navigation-width);
         height: 100%;
         z-index: 5;
         overflow-x: hidden;
@@ -193,10 +192,9 @@ fuse-vertical-navigation {
     }
 
     &.fuse-vertical-navigation-position-right {
-
         .fuse-vertical-navigation-aside-wrapper {
             left: auto;
-            right: #{$fuse-vertical-navigation-width}px;
+            right: var(--fuse-vertical-navigation-width);
         }
     }
 
@@ -217,7 +215,6 @@ fuse-vertical-navigation {
         user-select: none;
 
         .fuse-vertical-navigation-item-wrapper {
-
             .fuse-vertical-navigation-item {
                 position: relative;
                 display: flex;
@@ -241,7 +238,6 @@ fuse-vertical-navigation {
                 }
 
                 .fuse-vertical-navigation-item-title-wrapper {
-
                     .fuse-vertical-navigation-item-subtitle {
                         font-size: 11px;
                         line-height: 1.5;
@@ -270,7 +266,6 @@ fuse-vertical-navigation {
     fuse-vertical-navigation-basic-item,
     fuse-vertical-navigation-collapsable-item,
     fuse-vertical-navigation-group-item {
-
         > .fuse-vertical-navigation-item-wrapper {
             margin: 0 12px;
         }
@@ -289,23 +284,17 @@ fuse-vertical-navigation {
 
     /* Aside */
     fuse-vertical-navigation-aside-item {
-
     }
 
     /* Basic */
     fuse-vertical-navigation-basic-item {
-
     }
 
     /* Collapsable */
     fuse-vertical-navigation-collapsable-item {
-
         > .fuse-vertical-navigation-item-wrapper {
-
             .fuse-vertical-navigation-item {
-
                 .fuse-vertical-navigation-item-badge {
-
                     + .fuse-vertical-navigation-item-arrow {
                         margin-left: 8px;
                     }
@@ -315,18 +304,16 @@ fuse-vertical-navigation {
                     height: 20px;
                     line-height: 20px;
                     margin-left: auto;
-                    transition: transform 300ms cubic-bezier(0.25, 0.8, 0.25, 1),
-                    color 375ms cubic-bezier(0.25, 0.8, 0.25, 1);
+                    transition:
+                        transform 300ms cubic-bezier(0.25, 0.8, 0.25, 1),
+                        color 375ms cubic-bezier(0.25, 0.8, 0.25, 1);
                 }
             }
         }
 
         &.fuse-vertical-navigation-item-expanded {
-
             > .fuse-vertical-navigation-item-wrapper {
-
                 .fuse-vertical-navigation-item {
-
                     .fuse-vertical-navigation-item-arrow {
                         transform: rotate(90deg);
                     }
@@ -335,13 +322,14 @@ fuse-vertical-navigation {
         }
 
         > .fuse-vertical-navigation-item-children {
-            margin-top: 6px;
+            > *:first-child {
+                margin-top: 6px;
+            }
 
             > *:last-child {
                 padding-bottom: 6px;
 
                 > .fuse-vertical-navigation-item-children {
-
                     > *:last-child {
                         padding-bottom: 0;
                     }
@@ -363,21 +351,18 @@ fuse-vertical-navigation {
 
             /* 2nd level */
             .fuse-vertical-navigation-item-children {
-
                 .fuse-vertical-navigation-item {
                     padding-left: 72px;
                 }
 
                 /* 3rd level */
                 .fuse-vertical-navigation-item-children {
-
                     .fuse-vertical-navigation-item {
                         padding-left: 88px;
                     }
 
                     /* 4th level */
                     .fuse-vertical-navigation-item-children {
-
                         .fuse-vertical-navigation-item {
                             padding-left: 104px;
                         }
@@ -399,18 +384,14 @@ fuse-vertical-navigation {
 
     /* Group */
     fuse-vertical-navigation-group-item {
-
         > .fuse-vertical-navigation-item-wrapper {
-
             .fuse-vertical-navigation-item {
-
                 .fuse-vertical-navigation-item-badge,
                 .fuse-vertical-navigation-item-icon {
                     display: none !important;
                 }
 
                 .fuse-vertical-navigation-item-title-wrapper {
-
                     .fuse-vertical-navigation-item-title {
                         font-size: 12px;
                         font-weight: 600;
@@ -469,9 +450,7 @@ fuse-vertical-navigation-aside-item,
 fuse-vertical-navigation-basic-item,
 fuse-vertical-navigation-collapsable-item,
 fuse-vertical-navigation-group-item {
-
     .fuse-vertical-navigation-item-wrapper {
-
         .fuse-vertical-navigation-item {
             color: currentColor;
 
@@ -480,7 +459,6 @@ fuse-vertical-navigation-group-item {
             }
 
             .fuse-vertical-navigation-item-title-wrapper {
-
                 .fuse-vertical-navigation-item-title {
                     @apply text-current opacity-80;
                 }
@@ -497,14 +475,10 @@ fuse-vertical-navigation-group-item {
 fuse-vertical-navigation-aside-item,
 fuse-vertical-navigation-basic-item,
 fuse-vertical-navigation-collapsable-item {
-
     > .fuse-vertical-navigation-item-wrapper {
-
         .fuse-vertical-navigation-item {
-
             /* Active state */
             &:not(.fuse-vertical-navigation-item-disabled) {
-
                 &.fuse-vertical-navigation-item-active,
                 &.fuse-vertical-navigation-item-active-forced {
                     @apply bg-gray-800 bg-opacity-5 dark:bg-white dark:bg-opacity-12;
@@ -524,8 +498,9 @@ fuse-vertical-navigation-collapsable-item {
             }
 
             /* Hover state */
-            &:not(.fuse-vertical-navigation-item-active-forced):not(.fuse-vertical-navigation-item-active):not(.fuse-vertical-navigation-item-disabled) {
-
+            &:not(.fuse-vertical-navigation-item-active-forced):not(
+                    .fuse-vertical-navigation-item-active
+                ):not(.fuse-vertical-navigation-item-disabled) {
                 &:hover {
                     @apply bg-gray-800 bg-opacity-5 dark:bg-white dark:bg-opacity-12;
 
@@ -549,14 +524,10 @@ fuse-vertical-navigation-collapsable-item {
 
 /* Collapsable */
 fuse-vertical-navigation-collapsable-item {
-
     /* Expanded state */
     &.fuse-vertical-navigation-item-expanded {
-
         > .fuse-vertical-navigation-item-wrapper {
-
             .fuse-vertical-navigation-item {
-
                 .fuse-vertical-navigation-item-icon {
                     @apply opacity-100;
                 }
@@ -576,15 +547,11 @@ fuse-vertical-navigation-collapsable-item {
 
 /* Group */
 fuse-vertical-navigation-group-item {
-
     > .fuse-vertical-navigation-item-wrapper {
-
         .fuse-vertical-navigation-item {
-
             .fuse-vertical-navigation-item-title-wrapper {
-
                 .fuse-vertical-navigation-item-title {
-                    @apply opacity-100 text-primary-600 dark:text-primary-400;
+                    @apply text-primary-600 opacity-100 dark:text-primary-400;
                 }
             }
         }
