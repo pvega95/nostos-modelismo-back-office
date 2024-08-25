@@ -19,10 +19,10 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { debounceTime, map, switchMap, takeUntil } from 'rxjs/operators';
 import { FuseUtilsService } from '../../../../@fuse/services/utils/utils.service';
-import { OrdersService } from './order.service';
+import { OrderService } from './order.service';
 // import { StatusOrder } from '../../../enums/status.enum';
 import { MatDialog } from '@angular/material/dialog';
 // import { WindowModalComponent } from '../../../shared/window-modal/window-modal.component';
@@ -34,6 +34,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
+import { Order } from './order.types';
 
 @Component({
   selector: 'app-order',
@@ -49,7 +50,8 @@ import { MatIconModule } from '@angular/material/icon';
     MatInputModule,
     FormsModule,
     ReactiveFormsModule,
-    MatButtonModule
+    MatButtonModule,
+    AsyncPipe
   ],
 })
 export class OrderComponent implements OnInit {
@@ -58,7 +60,7 @@ export class OrderComponent implements OnInit {
   public orders: any[];
   public ordersFiltered: any[];
   public statusOrders: any[];
-  public products: any[];
+//   public products: any[];
   public isLoading: boolean;
   public orderStatusSelected: string;
   public flashMessage: boolean;
@@ -68,11 +70,14 @@ export class OrderComponent implements OnInit {
   selected: number;
   private _unsubscribeAll: Subject<any> = new Subject<any>();
 
-  // searchInputControl: FormControl = new FormControl();
   searchInputControl: UntypedFormControl = new UntypedFormControl();
 
+  // MIGRATION
+
+  products$: Observable<Order[]>;
+
   constructor(
-      private ordersService: OrdersService,
+      private _orderService: OrderService,
       private fuseUtilsService: FuseUtilsService,
       private _changeDetectorRef: ChangeDetectorRef,
       public dialog: MatDialog,
@@ -82,6 +87,8 @@ export class OrderComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // Get the products
+    this.products$ = this._orderService.products$;
       this.cargarLista();
       this.searchInputControl.valueChanges
           .pipe(
@@ -132,14 +139,14 @@ export class OrderComponent implements OnInit {
       let resp1: any;
       let resp2: any;
 
-      this.products = [];
+    //   this.products = [];
       this.orders = [];
       this.ordersFiltered = [];
       this.statusOrders = [];
       this.isLoading = true;
 
-      resp1 = await this.ordersService.listarOrdenes();
-      resp2 = await this.ordersService.listarEstadosOrdenes();
+    //   resp1 = await this.ordersService.listarOrdenes();
+      resp2 = await this._orderService.listarEstadosOrdenes();
 
       if (resp1.ok && resp2.ok) {
           // Get the ordersn
@@ -183,14 +190,14 @@ export class OrderComponent implements OnInit {
 
       this.selectedOrder = orderEncontrado;
       if (orderEncontrado._id) {
-          this.products = [];
+        //   this.products = [];
           this.selectedOrderForm.patchValue({
               id: orderEncontrado._id,
               name: orderEncontrado.name,
               sku: orderEncontrado.sku,
               category: orderEncontrado.category,
           });
-          this.products = orderEncontrado.products;
+        //   this.products = orderEncontrado.products;
           this.orderStatusSelected = orderEncontrado.order_status._id;
       } else {
           let descriptions = [''];
@@ -213,7 +220,7 @@ export class OrderComponent implements OnInit {
           order_status: this.orderStatusSelected,
       };
       this.isLoading = true;
-      resp = await this.ordersService.editarEstadoOrden(idOrder, body);
+      resp = await this._orderService.editarEstadoOrden(idOrder, body);
       this.seeMessage = true;
       this.flashMessage = resp.success;
       if (resp.success) {
