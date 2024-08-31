@@ -42,7 +42,28 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 title: 'Products',
                 type : 'basic',
                 icon : 'heroicons_outline:chart-pie',
-                link : '/products'
+                link : '/setting/products'
+            }, 
+            {
+                id   : 'setting.category.id',
+                title: 'Category',
+                type : 'basic',
+                icon : 'heroicons_outline:chart-pie',
+                link : '/setting/category'
+            }, 
+            {
+                id   : 'setting.brand.id',
+                title: 'Brand',
+                type : 'basic',
+                icon : 'heroicons_outline:chart-pie',
+                link : '/setting/brand'
+            }, 
+            {
+                id   : 'setting.unid.id',
+                title: 'Unid',
+                type : 'basic',
+                icon : 'heroicons_outline:chart-pie',
+                link : '/setting/unid'
             }, 
         ]
     }
