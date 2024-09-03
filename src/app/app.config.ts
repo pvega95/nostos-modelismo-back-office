@@ -57,12 +57,12 @@ export const appConfig: ApplicationConfig = {
                         label: 'English',
                     },
                     {
-                        id: 'tr',
-                        label: 'Turkish',
+                        id: 'es',
+                        label: 'Spanish',
                     },
                 ],
-                defaultLang: 'en',
-                fallbackLang: 'en',
+                defaultLang: navigator.language.split('-')[0], // con eso detecta lenguaje del navegador por default
+                fallbackLang: navigator.language.split('-')[0],
                 reRenderOnLangChange: true,
                 prodMode: true,
             },

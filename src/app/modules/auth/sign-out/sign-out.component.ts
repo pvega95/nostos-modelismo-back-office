@@ -1,15 +1,16 @@
 import { I18nPluralPipe } from '@angular/common';
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
+import { TranslocoModule, TranslocoService } from '@ngneat/transloco';
 import { AuthService } from 'app/core/auth/auth.service';
-import { Subject, finalize, takeUntil, takeWhile, tap, timer } from 'rxjs';
+import { Subject, finalize, forkJoin, take, takeUntil, takeWhile, tap, timer } from 'rxjs';
 
 @Component({
     selector: 'auth-sign-out',
     templateUrl: './sign-out.component.html',
     encapsulation: ViewEncapsulation.None,
     standalone: true,
-    imports: [RouterLink, I18nPluralPipe],
+    imports: [RouterLink, I18nPluralPipe, TranslocoModule],
 })
 export class AuthSignOutComponent implements OnInit, OnDestroy {
     countdown: number = 5;
@@ -24,8 +25,12 @@ export class AuthSignOutComponent implements OnInit, OnDestroy {
      */
     constructor(
         private _authService: AuthService,
-        private _router: Router
-    ) {}
+        private _router: Router,
+        private _translocoService: TranslocoService
+    ) {
+
+
+    }
 
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks
@@ -35,6 +40,21 @@ export class AuthSignOutComponent implements OnInit, OnDestroy {
      * On init
      */
     ngOnInit(): void {
+        const observable = forkJoin({
+            var1: this._translocoService.selectTranslate('second').pipe(take(1)),
+            var2: this._translocoService.selectTranslate('seconds').pipe(take(1)),
+          });
+
+          observable.subscribe({
+            next: (value) => {
+             const {var1, var2} = value;
+             this.countdownMapping = {
+                '=1': '# '+ var1,
+                other: '# '+ var2,
+            };
+
+            }
+           });
         // Sign out
         this._authService.signOut();
 
