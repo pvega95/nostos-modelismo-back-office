@@ -10,15 +10,15 @@ import { Sales } from './sales.types';
 
 export class SalesService {
   static readonly BASE_URL = `${environment.backendURL}`;
-  private _products: BehaviorSubject<Sales[] | null> =
+  private _sales: BehaviorSubject<Sales[] | null> =
     new BehaviorSubject(null);
   constructor(private _httpClient: HttpClient) { }
 
   /**
-     * Getter for products
+     * Getter for sales
      */
-  get products$(): Observable<Sales[]> {
-    return this._products.asObservable();
+  get sales$(): Observable<Sales[]> {
+    return this._sales.asObservable();
   }
 
   /**
@@ -31,9 +31,9 @@ export class SalesService {
         map((sale) => sale.data),
         map((sale) => sale[0]),
         map((sale) => sale.docs),
-        tap((brands) => {
-          console.log('brands', brands)
-          this._products.next(brands);
+        tap((sales) => {
+          console.log('sales', sales)
+          this._sales.next(sales);
         })
       );
   }

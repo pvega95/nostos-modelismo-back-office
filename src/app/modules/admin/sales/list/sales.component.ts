@@ -65,7 +65,7 @@ import { SalesService } from '../sales.service';
         RouterModule
     ],
 })
-export class SalesListComponent implements OnInit {    
+export class SalesListComponent implements OnInit {
     // MIGRATION
     public statusList: string[] = STATUS_ORDER;
     products$: Observable<Sales[]>;
@@ -79,7 +79,7 @@ export class SalesListComponent implements OnInit {
 
     ngOnInit(): void {
         // Get the products
-        this.products$ = this._salesService.products$;
+        this.products$ = this._salesService.sales$;
     }
 
 

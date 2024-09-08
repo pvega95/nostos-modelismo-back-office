@@ -1,0 +1,303 @@
+<div class="sm:absolute sm:inset-0 flex flex-col flex-auto min-w-0 sm:overflow-hidden bg-card dark:bg-transparent">
+
+    <!-- Header -->
+    <div class="relative py-8 px-6 md:px-8 border-b bg-card dark:bg-transparent">
+        <!-- Loader -->
+        <div
+            class="absolute inset-x-0 bottom-0"
+            *ngIf="isLoading">
+            <mat-progress-bar [mode]="'indeterminate'"></mat-progress-bar>
+        </div>
+        <!-- Title -->
+        <ng-container *transloco="let t">
+            <div class="text-4xl font-extrabold tracking-tight">Compañía</div>
+        </ng-container>
+        <!-- Actions -->
+        <div class="
+                    w-full
+                    flex flex-col
+                    sm:flex-row
+                    flex-0
+                    sm:items-end sm:justify-between
+                ">
+            <!-- Search -->
+            <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript w-4/12 pr-4"
+                [floatLabel]="'always'"
+                >
+                <mat-icon
+                    matPrefix
+                    [svgIcon]="'heroicons_outline:search'"></mat-icon>
+                <mat-label>Compañía</mat-label>
+                <input
+                    matInput
+                    [formControl]="searchInputControl"
+                    [autocomplete]="'off'"
+                    [placeholder]="'Buscar compañía'">
+            </mat-form-field>
+            <!-- Add product button -->
+            <button
+                class="ml-4 w-3/12 pr-4"
+                mat-flat-button
+                [color]="'primary'"
+                (click)="createCompany()">
+                <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+                <span class="ml-2 mr-1">Agregar nueva compañía</span>
+            </button>
+        </div>
+    </div>
+<!--     <div >
+        <P>{{clientPresenter.form.value | json}} </P>
+    </div> -->
+
+    <!-- Main -->
+    <div class="flex flex-auto overflow-hidden">
+               <!-- companies list -->
+               <div class="flex flex-col flex-auto sm:mb-18 overflow-hidden sm:overflow-y-auto">
+                <ng-container *ngIf="!(isLoading && companies.length === 0); else loadingCompany">
+                    <ng-container *ngIf="companies.length > 0 && companiesFiltered.length > 0 ; else noCompany">
+                        <div class="grid">
+                            <!-- Header -->
+                            <div
+                                class="inventory-grid z-10 sticky top-0 grid gap-4 py-4 px-6 md:px-8 shadow text-md font-semibold text-secondary bg-gray-50 dark:bg-black dark:bg-opacity-5"
+                                matSort
+                                matSortDisableClear>
+        
+                                <div 
+                                    class="hidden md:block"
+                                    [mat-sort-header]="'name'">
+                                    Nombre comercial
+                                </div>
+                                <div
+                                    class="hidden sm:block"
+                                    [mat-sort-header]="'ruc'">
+                                    RUC
+                                </div>
+                                <div
+                                    class="hidden lg:block"
+                                    [mat-sort-header]="'createdAt'">
+                                    Fecha de creación
+                                </div>
+                                <div
+                                    class="hidden lg:block"
+                                    [mat-sort-header]="'updatedAt'">
+                                    Fecha de modificación
+                                </div>
+                                <div class="hidden sm:block">Detalles</div>
+                            </div>
+                            <!-- Rows -->
+                          
+                                <ng-container *ngFor="let company of companiesFiltered; trackBy: trackByFn">
+                                    <div class="inventory-grid grid items-center gap-4 py-3 px-6 md:px-8 border-b">
+                                        <!-- comercial name -->
+                                        <div class="truncate">
+                                            {{company.comercialName}}
+                                        </div>
+                                        <!-- ruc -->
+                                        <div class="truncate">
+                                            {{company.ruc}}
+                                        </div>
+                                        <!-- creation date -->
+                                        <div class="truncate"  >
+                                            {{formatoFecha(company.createdAt)}}
+                                        </div>
+                                        <!-- update date -->
+                                            <div class="truncate">
+                                            {{formatoFecha(company.updatedAt)}}
+                                        </div>
+                         
+    
+                                        <!-- Details button -->
+                                        <div>
+                                            <button
+                                                class="min-w-10 min-h-7 h-7 px-2 leading-6"
+                                                mat-stroked-button
+                                                (click)="toggleDetails(company._id)">
+                                                <mat-icon
+                                                    class="icon-size-5"
+                                                    [svgIcon]="selectedCompany?._id === company._id ? 'heroicons_solid:chevron-up' : 'heroicons_solid:chevron-down'"></mat-icon>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="grid">
+                                        <ng-container *ngIf="selectedCompany?._id === company._id">
+                                            <ng-container *ngTemplateOutlet="rowDetailsTemplate; context: {$implicit: company}"></ng-container>
+                                        </ng-container>
+                                    </div>
+                                </ng-container>
+                          
+                        </div>
+    
+                    </ng-container>
+                </ng-container>
+                
+    
+                <ng-template
+                    #rowDetailsTemplate
+                    let-product>
+                    <div class="shadow-lg overflow-hidden">
+                        <div class="flex border-b">
+                            <!-- Selected product form -->
+                            <div   class="flex flex-col w-full"
+                                [formGroup]="selectedCompanyForm">
+    
+                                <div class="relative flex-row flex-0 mx-3 p-8">
+    
+                                    <div class="relative flex flex-0 ">
+                                        <!-- Name, SKU & etc. -->
+                                        <div class="w-9/12">
+    
+                                            <!-- Name -->
+                                            <mat-form-field class="pr-2" style="width: 100%;">
+                                                <mat-label>Nombre comercial</mat-label>
+                                                <input
+                                                    matInput
+                                                    [formControlName]="'comercialName'">
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="w-3/12">
+                                            <!-- thumbnail -->
+                                            <mat-form-field class="pr-2" style="width: 100%;">
+                                                <mat-label>RUC</mat-label>
+                                                <input
+                                                    [imask]="maskForRUC"
+                                                    matInput
+                                                    [formControlName]="'ruc'">
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                   
+                                    <div class="relative flex-row flex-0 border-b my-1" > 
+                                        <!--       <div>
+                                                  <p>{{selectedCompanyForm.value | json}} </p> 
+                                              </div> -->
+                                              <div class="relative flex flex-0 w-full">
+                                                  <p class="mb-2" style="color: blue; font-weight: bold;">Dirección </p>
+                                              </div>
+                                              <div class="relative flex flex-0 w-full">
+                                                  
+                                                  <div class="w-4/12 pr-2" >
+                                                  <app-select-search *ngIf="departments.length > 0 " [labelTop]= "'Departamento'" [listObj] = "listObjDepartment" 
+                                                      [placeholder]="'departamento'" [placeholderLabel]="'Buscar departamento'" [id]= "selectedCompanyForm.get('department').value"
+                                                      [noEntriesFoundLabel]="'departamento no encontrado'" (objSelectedOut)="objDepartmentSelected($event)"  > 
+                                                  </app-select-search>                        
+                                                  </div>
+                                            
+                                                  <div class="w-4/12 pr-2" *ngIf="selectedCompanyForm.get('listObjProvince').value.length > 0 ">
+                                                      <app-select-search  [labelTop]= "'Provincia'" [listObj] = "selectedCompanyForm.get('listObjProvince').value" 
+                                                          [placeholder]="'provincia'" [placeholderLabel]="'Buscar provincia'" [id]= "selectedCompanyForm.get('province').value"
+                                                          [noEntriesFoundLabel]="'provincia no encontrada'" (objSelectedOut)="objProvinceSelected($event)"   > 
+                                                      </app-select-search>                        
+                                                  </div>
+                                                  <div class="w-4/12 pr-2">
+                                                      <app-select-search *ngIf="selectedCompanyForm.get('listObjDistrict').value != '' " [labelTop]= "'Distrito'" [listObj] = "selectedCompanyForm.get('listObjDistrict').value" 
+                                                          [placeholder]="'distrito'" [placeholderLabel]="'Buscar distrito'" [id]= "selectedCompanyForm.get('district').value"
+                                                          [noEntriesFoundLabel]="'distrito no encontrado'" (objSelectedOut)="objDistrictSelected($event)"   > 
+                                                      </app-select-search>                        
+                                                  </div>  
+                                              </div>
+                                    </div>
+                                    <div class="relative flex flex-0 ">
+                                        <div class="w-6/12">
+                                            <div class="relative flex flex-0 mt-2">
+                                                <mat-form-field *ngIf="selectedCompanyForm.get('createdDate').value !== '' " class="w-6/12 pr-2">
+                                                    <mat-label>Fecha de creación</mat-label>
+                                                    <input readonly
+                                                        matInput
+                                                        [formControlName]="'createdDate'">
+                                                </mat-form-field>
+                                                <mat-form-field *ngIf="selectedCompanyForm.get('updatedDate').value !== '' "  class="w-6/12 pr-2">
+                                                    <mat-label>Fecha de actualización</mat-label>
+                                                    <input readonly
+                                                        matInput
+                                                        [formControlName]="'updatedDate'">
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center justify-between w-full border-t px-8 py-4">
+                                        <button
+                                            class="-ml-4"
+                                            mat-button
+                                            [color]="'warn'"
+                                            (click)="deleteSelectedCompany()">
+                                            Eliminar
+                                        </button>
+                                        <div class="flex items-center">
+                                            <div
+                                                class="flex items-center mr-4"
+                                                *ngIf="seeMessage">
+                                                <ng-container *ngIf="flashMessage">
+                                                    <mat-icon
+                                                        class="text-green-500"
+                                                        [svgIcon]="'heroicons_outline:check'"></mat-icon>
+                                                    <span class="ml-2">{{successMessage}}</span>
+                                                </ng-container>
+                                                <ng-container *ngIf="!flashMessage">
+                                                    <mat-icon
+                                                        class="text-red-500"
+                                                        [svgIcon]="'heroicons_outline:x'"></mat-icon>
+                                                    <span class="ml-2">un error occurrió, prueba de nuevo!</span>
+                                                </ng-container>
+                                            </div>
+                                            <ng-container *ngIf="selectedCompanyForm.get('_id').value !== '-1';else nuevaCompania" >
+                                                <div class="w-full max-w-80 sm:w-30 mx-auto sm:mx-0">
+                                                    <button
+                                                        class=" w-full "
+                                                        mat-flat-button
+                                                        [disabled] = "!selectedCompanyForm.valid || isLoading"
+                                                        [color]="'primary'"
+                                                        (click)="updateSelectedCompany()">
+                                                        <span *ngIf="!isLoading">
+                                                            Actualizar
+                                                        </span>
+                                                        <mat-progress-spinner
+                                                        *ngIf="isLoading"
+                                                        [diameter]="22"
+                                                        [mode]="'indeterminate'"></mat-progress-spinner>
+                                                    </button>
+                                                </div>
+                                            </ng-container>
+                                            <ng-template #nuevaCompania>
+                                                <div class="w-full max-w-80 sm:w-50 mx-auto sm:mx-0">
+                                                    <button
+                                                        class=" w-full "
+                                                        mat-flat-button
+                                                        [disabled] = "!selectedCompanyForm.valid || isLoading"
+                                                        [color]="'primary'"
+                                                        (click)="createNewCompany()">
+                                                        <span *ngIf="!isLoading">
+                                                            Crear nueva compañía
+                                                        </span>
+                                                        <mat-progress-spinner
+                                                        *ngIf="isLoading"
+                                                        [diameter]="22"
+                                                        [mode]="'indeterminate'"></mat-progress-spinner>
+                                                    </button>
+                                                </div>
+                                            </ng-template>
+                                      
+                                        </div>
+                                    </div>
+
+
+
+    
+                                </div>
+                           
+    
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+    
+                <ng-template #noCompany>
+                    <div class="p-8 sm:p-16 border-t text-4xl font-semibold tracking-tight text-center">No hay compañías!</div>
+                </ng-template>
+                <ng-template #loadingCompany>
+                    <div class="p-8 sm:p-16 border-t text-4xl font-semibold tracking-tight text-center">Cargando lista de compañías</div>
+                </ng-template>
+    
+            </div>
+
+    </div>
+</div>

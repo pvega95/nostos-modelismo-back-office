@@ -4,6 +4,10 @@ import { inject } from '@angular/core';
 import { SalesComponent } from './sales.component';
 import { SalesCreateUpdateComponent } from './create-update/sales-create-update.tcomponen';
 import { SalesListComponent } from './list/sales.component';
+import { CompanyService } from 'app/modules/settings/company/company.service';
+import { DocumentService } from 'app/modules/settings/document/document.service';
+import { PaymentDeadlineService } from 'app/modules/settings/payment-deadline/payment-deadline.service';
+import { PaymentMethodService } from 'app/modules/settings/payment-method/payment-method.service';
 
 export default [
     {
@@ -21,6 +25,12 @@ export default [
             {
                 path     : 'new',
                 component: SalesCreateUpdateComponent,
+                resolve  : {
+                    companies: () => inject(CompanyService).getListCompany(),
+                    documents: () => inject(DocumentService).getListDocument(),
+                    paymentDeadlines: () => inject(PaymentDeadlineService).getListPaymentDeadline(),
+                    paymentMethods: () => inject(PaymentMethodService).getListPaymentMethod(),
+                },
             },
             {
                 path     : 'edit/:id',

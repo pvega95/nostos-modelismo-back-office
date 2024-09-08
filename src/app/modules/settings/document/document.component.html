@@ -1,0 +1,252 @@
+<div class="sm:absolute sm:inset-0 flex flex-col flex-auto min-w-0 sm:overflow-hidden bg-card dark:bg-transparent">
+
+    <!-- Header -->
+    <div class="relative py-8 px-6 md:px-8 border-b bg-card dark:bg-transparent">
+        <!-- Loader -->
+        <div
+            class="absolute inset-x-0 bottom-0"
+            *ngIf="isLoading">
+            <mat-progress-bar [mode]="'indeterminate'"></mat-progress-bar>
+        </div>
+        <!-- Title -->
+        <ng-container *transloco="let t">
+            <div class="text-4xl font-extrabold tracking-tight">Documento</div>
+        </ng-container>
+        <!-- Actions -->
+        <div class="
+                    w-full
+                    flex flex-col
+                    sm:flex-row
+                    flex-0
+                    sm:items-end sm:justify-between
+                ">
+            <!-- Search -->
+            <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript w-4/12 pr-4"
+                [floatLabel]="'always'"
+                >
+                <mat-icon
+                    matPrefix
+                    [svgIcon]="'heroicons_outline:search'"></mat-icon>
+                    <mat-label>Documento</mat-label>
+                <input
+                    matInput
+                    [formControl]="searchInputControl"
+                    [autocomplete]="'off'"
+                    [placeholder]="'Buscar documento'">
+            </mat-form-field>
+            <!-- Add product button -->
+            <!-- <button
+                class="ml-4  w-3/12 pr-4"
+                mat-flat-button
+                [color]="'primary'"
+                (click)="createDocument()">
+                <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+                <span class="ml-2 mr-1">Agregar nuevo documento</span>
+            </button> -->
+        </div>
+    </div>
+    <!--     <div >
+        <P>{{clientPresenter.form.value | json}} </P>
+    </div> -->
+<!-- Main -->
+<div class="flex flex-auto overflow-hidden">
+    <!-- documents list -->
+    <div class="flex flex-col flex-auto sm:mb-18 overflow-hidden sm:overflow-y-auto">
+     <ng-container *ngIf="!(isLoading && documents.length === 0); else loadingDocument">
+         <ng-container *ngIf="documents.length > 0 && documentsFiltered.length > 0 ; else noDocument">
+             <div class="grid">
+                 <!-- Header -->
+                 <div
+                     class="inventory-grid z-10 sticky top-0 grid gap-4 py-4 px-6 md:px-8 shadow text-md font-semibold text-secondary bg-gray-50 dark:bg-black dark:bg-opacity-5"
+                     matSort
+                     matSortDisableClear>
+
+                     <div 
+                         class="hidden md:block"
+                         [mat-sort-header]="'description'">
+                         Descripción
+                     </div>
+                     <div
+                         class="hidden sm:block"
+                         [mat-sort-header]="'abreviation'">
+                         Abreviación
+                     </div>
+                     <div
+                         class="hidden lg:block"
+                         [mat-sort-header]="'typeDocument'">
+                         Tipo documento
+                     </div>
+                     <div class="hidden sm:block">Detalles</div>
+                 </div>
+                 <!-- Rows -->
+               
+                     <ng-container *ngFor="let document of documentsFiltered; trackBy: trackByFn">
+                         <div class="inventory-grid grid items-center gap-4 py-3 px-6 md:px-8 border-b">
+                             <!-- comercial name -->
+                             <div class="truncate">
+                                 {{document.description}}
+                             </div>
+                             <!-- ruc -->
+                             <div class="truncate">
+                                 {{document.abreviation}}
+                             </div>
+                             <!-- creation date -->
+                             <div class="truncate"  >
+                                 {{document.typeDocument}}
+                             </div>
+                             <!-- Details button -->
+                             <div>
+                                 <button
+                                     class="min-w-10 min-h-7 h-7 px-2 leading-6"
+                                     mat-stroked-button
+                                     (click)="toggleDetails(document._id)">
+                                     <mat-icon
+                                         class="icon-size-5"
+                                         [svgIcon]="selectedDocument?._id === document._id ? 'heroicons_solid:chevron-up' : 'heroicons_solid:chevron-down'"></mat-icon>
+                                 </button>
+                             </div>
+                         </div>
+                         <div class="grid">
+                             <ng-container *ngIf="selectedDocument?._id === document._id">
+                                 <ng-container *ngTemplateOutlet="rowDetailsTemplate; context: {$implicit: document}"></ng-container>
+                             </ng-container>
+                         </div>
+                     </ng-container>
+             </div>
+         </ng-container>
+     </ng-container>
+     
+
+     <ng-template
+         #rowDetailsTemplate
+         let-product>
+         <div class="shadow-lg overflow-hidden">
+             <div class="flex border-b">
+                 <!-- Selected product form -->
+                 <div   class="flex flex-col w-full"
+                     [formGroup]="selectedDocumentForm">
+
+                     <div class="relative flex-row flex-0 mx-3 p-8">
+
+                         <div class="relative flex flex-0 ">
+                             <!-- Name, SKU & etc. -->
+                             <div class="w-4/12">
+
+                                 <!-- Name -->
+                                 <mat-form-field class="pr-2" style="width: 100%;">
+                                     <mat-label>Descripción</mat-label>
+                                     <input
+                                         [imask]="maskForInput"
+                                         matInput
+                                         [formControlName]="'description'">
+                                 </mat-form-field>
+                             </div>
+                             <div class="w-4/12">
+                                 <!-- thumbnail -->
+                                 <mat-form-field class="pr-2" style="width: 100%;">
+                                     <mat-label>Abreviación</mat-label>
+                                     <input
+                                         [imask]="maskForInput"
+                                         matInput
+                                         [formControlName]="'abreviation'">
+                                 </mat-form-field>
+                             </div>
+                             <div class="w-4/12">
+                                <!-- thumbnail -->
+                                <mat-form-field class="pr-2" style="width: 100%;">
+                                    <mat-label>Tipo documento</mat-label>
+                                    <input
+                                        [imask]="maskForInput"
+                                        matInput
+                                        [formControlName]="'typeDocument'">
+                                </mat-form-field>
+                            </div>
+                         </div>
+                        
+                         <div class="flex items-center justify-between w-full border-t px-8 py-4">
+                             <button
+                                 class="-ml-4"
+                                 mat-button
+                                 [color]="'warn'"
+                                 (click)="deleteSelectedDocument()">
+                                 Eliminar
+                             </button>
+                             <div class="flex items-center">
+                                 <div
+                                     class="flex items-center mr-4"
+                                     *ngIf="seeMessage">
+                                     <ng-container *ngIf="flashMessage">
+                                         <mat-icon
+                                             class="text-green-500"
+                                             [svgIcon]="'heroicons_outline:check'"></mat-icon>
+                                         <span class="ml-2">{{successMessage}}</span>
+                                     </ng-container>
+                                     <ng-container *ngIf="!flashMessage">
+                                         <mat-icon
+                                             class="text-red-500"
+                                             [svgIcon]="'heroicons_outline:x'"></mat-icon>
+                                         <span class="ml-2">un error occurrió, prueba de nuevo!</span>
+                                     </ng-container>
+                                 </div>
+                                 <ng-container *ngIf="selectedDocumentForm.get('_id').value !== '-1' ;else nuevaDocumento" >
+                                     <div class="w-full max-w-80 sm:w-30 mx-auto sm:mx-0">
+                                         <button
+                                             class=" w-full "
+                                             mat-flat-button
+                                             [disabled] = "!selectedDocumentForm.valid || isLoading"
+                                             [color]="'primary'"
+                                             (click)="updateSelectedDocument()">
+                                             <span *ngIf="!isLoading">
+                                                 Actualizar
+                                             </span>
+                                             <mat-progress-spinner
+                                             *ngIf="isLoading"
+                                             [diameter]="22"
+                                             [mode]="'indeterminate'"></mat-progress-spinner>
+                                         </button>
+                                     </div>
+                                 </ng-container>
+                                 <ng-template #nuevaDocumento>
+                                     <div class="w-full max-w-80 sm:w-50 mx-auto sm:mx-0">
+                                         <button
+                                             class=" w-full "
+                                             mat-flat-button
+                                             [disabled] = "!selectedDocumentForm.valid || isLoading"
+                                             [color]="'primary'"
+                                             (click)="createNewdocument()">
+                                             <span *ngIf="!isLoading">
+                                                 Crear nuevo documento
+                                             </span>
+                                             <mat-progress-spinner
+                                             *ngIf="isLoading"
+                                             [diameter]="22"
+                                             [mode]="'indeterminate'"></mat-progress-spinner>
+                                         </button>
+                                     </div>
+                                 </ng-template>
+                           
+                             </div>
+                         </div>
+
+                     </div>
+                
+
+                 </div>
+             </div>
+         </div>
+     </ng-template>
+
+     <ng-template #noDocument>
+         <div class="p-8 sm:p-16 border-t text-4xl font-semibold tracking-tight text-center">No hay documentos!</div>
+     </ng-template>
+     <ng-template #loadingDocument>
+         <div class="p-8 sm:p-16 border-t text-4xl font-semibold tracking-tight text-center">Cargando lista de documentos</div>
+     </ng-template>
+
+ </div>
+
+</div>
+
+
+
+</div>
