@@ -25,8 +25,8 @@ import { Sales } from '../sales.types';
 import { SalesService } from '../sales.service';
 
 @Component({
-    selector: 'app-sales',
-    templateUrl: './sales.component.html',
+    selector: 'app-sales-list',
+    templateUrl: './sales-list.component.html',
     styles: [
         /* language=SCSS */
         `
@@ -68,7 +68,7 @@ import { SalesService } from '../sales.service';
 export class SalesListComponent implements OnInit {
     // MIGRATION
     public statusList: string[] = STATUS_ORDER;
-    products$: Observable<Sales[]>;
+    sales$: Observable<Sales[]>;
     status: UntypedFormControl = new UntypedFormControl();
     searchInputControl: UntypedFormControl = new UntypedFormControl();
     isLoading: boolean = false;
@@ -78,8 +78,8 @@ export class SalesListComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        // Get the products
-        this.products$ = this._salesService.sales$;
+        // Get the sales
+        this.sales$ = this._salesService.sales$;
     }
 
 

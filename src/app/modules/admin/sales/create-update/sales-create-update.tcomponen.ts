@@ -26,6 +26,7 @@ import { AsyncPipe } from '@angular/common';
 import { DocumentService } from 'app/modules/settings/document/document.service';
 import { PaymentDeadlineService } from 'app/modules/settings/payment-deadline/payment-deadline.service';
 import { PaymentMethodService } from 'app/modules/settings/payment-method/payment-method.service';
+import { SalesModalComponent } from '../modal/sales-modal.component';
 
 @Component({
     selector: 'sales-create-update',
@@ -45,6 +46,34 @@ import { PaymentMethodService } from 'app/modules/settings/payment-method/paymen
         AsyncPipe,
         RouterModule
     ],
+    styles: [
+    `
+        sales-create-update {
+            flex-direction: column;
+        }
+        .inventory-grid-create-edit {
+            grid-template-columns: 48px auto 40px;
+
+            @screen sm {
+                grid-template-columns: 48px auto 112px 72px;
+            }
+
+            @screen md {
+                grid-template-columns: repeat(9, 1fr);
+
+            }
+
+            @screen lg {
+                grid-template-columns: repeat(9, 1fr);
+            }
+        }
+
+        .w-footer {
+        // max-width: calc(100% - 280px);
+        width: 100%;
+}
+    `
+    ]
 })
 export class SalesCreateUpdateComponent {
     public companies: Company[];
@@ -75,7 +104,7 @@ export class SalesCreateUpdateComponent {
         private _changeDetectorRef: ChangeDetectorRef,
         private router: Router,
         private route: ActivatedRoute
-    ) {}
+    ) { }
 
     public get form(): FormGroup {
         return this.presenter.form;
@@ -195,15 +224,13 @@ export class SalesCreateUpdateComponent {
     }
 
     addItem(): void {
-        // const dialogRef = this.dialog.open(WindowModalComponent, {
-        //     width: '48rem',
-        //     height: '30rem',
-        //     data: {
-        //         type: Modal.newItem,
-        //         voucherDetail: this.presenter.voucherDetail.getRawValue(),
-        //     },
-        //     disableClose: true,
-        // });
+        const dialogRef = this.dialog.open(SalesModalComponent, {
+            width: '48rem',
+            height: '30rem',
+            data: {
+                voucherDetail: this.presenter.voucherDetail.getRawValue(),
+            }
+        });
         // dialogRef.afterClosed().subscribe((products: Product[]) => {
         //     if (products) {
         //         this.presenter.addVoucherDetails(products);
@@ -216,16 +243,16 @@ export class SalesCreateUpdateComponent {
         this.presenter.removeVoucherDetail(index);
     }
 
-    cancelSelectedSaleNote(): void {}
-    createSaleNote(): void {}
-    saveSelectedSaleNote(): void {}
+    cancelSelectedSaleNote(): void { }
+    createSaleNote(): void { }
+    saveSelectedSaleNote(): void { }
 
     quantityUpdated(product): void {
         this.presenter.updateVoucherDetail(product);
     }
 
     cancel(): void {
-        this.router.navigate(['salenote']);
+        this.router.navigate(['sales']);
     }
 
     submitForm(): void {

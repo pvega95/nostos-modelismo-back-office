@@ -15,7 +15,7 @@ export class PaymentMethodService {
     static readonly confManagement = '/configuration-management';
     private _paymentMethods: BehaviorSubject<any[] | null> =
         new BehaviorSubject(null);
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient) { }
 
     /**
      * Getter for paymentDeadlines
@@ -32,10 +32,9 @@ export class PaymentMethodService {
     getListPaymentMethod(): Observable<any> {
         const url = `${PaymentMethodService.BASE_URL}${PaymentMethodService.confManagement}/payment-method`;
         return this.http.get(url).pipe(
-            tap((response: any) => {
-                this._paymentMethods.next(response);
-            }),
-            catchError((error) => {
+            map((response: any) => response.data),
+            tap((data) => this._paymentMethods.next(data)),
+            catchError(error => {
                 return this.formatErrors(error);
             })
         );

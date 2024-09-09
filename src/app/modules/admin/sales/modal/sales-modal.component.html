@@ -1,0 +1,94 @@
+<div class="relative flex flex-col  -m-6">
+
+    <div class="absolute top-0 right-0 pt-1 pr-4">
+        <button mat-icon-button matDialogClose>
+            <mat-icon class="text-secondary" [svgIcon]="'heroicons_outline:x-mark'"></mat-icon>
+        </button>
+    </div>
+
+    <div class="mt-4 px-5">
+        <div class="text-2xl font-extrabold tracking-tight text-center">
+            <span>Agregar Ítems</span>
+        </div>
+        <div class="relative flex-row sm:flex-row flex-0 sm:items-center sm:justify-between py-1 px-0 md:px-0 ">
+            @if (isLoading) {
+            <div class="absolute inset-x-0 top-0 px-9">
+                <mat-progress-bar [mode]="'indeterminate'"></mat-progress-bar>
+            </div>
+            } @else {
+            <ng-container>
+                <div class="relative flex flex-0 ">
+                    <div class="flex flex-col w-full">
+                        <div class="relative flex-row flex-0 mx-2 px-0 pt-0 pb-2">
+                            <div class="relative flex flex-0 ">
+                                <mat-form-field class="min-w-full" [floatLabel]="'always'">
+                                    <mat-label>Buscar</mat-label>
+                                    <input [formControl]="productSearch" matInput [autocomplete]="'off'"
+                                        [placeholder]="'Ingrese sku, nombre de item, precio'" />
+                                </mat-form-field>
+                            </div>
+                            <div class="relative flex flex-0 ">
+                                <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+                                    <ng-container matColumnDef="select">
+                                        <th mat-header-cell *matHeaderCellDef>
+                                            <mat-checkbox (change)="$event ? masterToggle() : null"
+                                                [checked]="hasValue() && isAllSelected()"
+                                                [indeterminate]="hasValue() && !isAllSelected()">
+                                            </mat-checkbox>
+                                        </th>
+                                        <td mat-cell *matCellDef="let element"
+                                            [ngClass]="{'itemSelected': element.selected === true}">
+                                            <mat-checkbox (click)="$event.stopPropagation()"
+                                                (change)="$event ? toggleItem(element) : null"
+                                                [checked]="element.selected || element.checked"
+                                                [disabled]="element.selected">
+                                            </mat-checkbox>
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="sku">
+                                        <th mat-header-cell *matHeaderCellDef> SKU </th>
+                                        <td mat-cell *matCellDef="let element"
+                                            [ngClass]="{'itemSelected': element.selected === true}"> {{element.sku}}
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="name">
+                                        <th mat-header-cell *matHeaderCellDef> Nombre </th>
+                                        <td mat-cell *matCellDef="let element"
+                                            [ngClass]="{'itemSelected': element.selected === true}">
+                                            <span
+                                                matTooltip="{{element.selected ? '' : element.name}}">{{element.name}}</span>
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="listprice">
+                                        <th mat-header-cell *matHeaderCellDef> Precio neto (S/.) </th>
+                                        <td mat-cell *matCellDef="let element"
+                                            [ngClass]="{'itemSelected': element.selected === true}">
+                                            {{element.listprice | number:'1.2-2'}} </td>
+                                    </ng-container>
+
+
+                                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="relative flex flex-0 ">
+                    <mat-paginator class="flex justify-end " [length]="metadataTotal" [pageSize]="pageSize"
+                        [pageSizeOptions]="[10]" (page)="changePage($event)" aria-label="">
+                    </mat-paginator>
+                </div>
+                <div class="relative flex flex-0 justify-center mb-2">
+                    <button class="  mx-3" mat-flat-button [color]="'primary'" (click)="addItem()">
+                        Agregar a la lista
+                    </button>
+                </div>
+            </ng-container>
+            }
+        </div>
+    </div>
+</div>

@@ -34,9 +34,8 @@ import { Company } from 'app/models/company';
     getListCompany():  Observable<any> {
       const url = `${CompanyService.BASE_URL}${CompanyService.confManagement}/company`;
       return this._httpClient.get(url).pipe(
-        tap((response: any)=> {
-          this._companies.next(response);
-        }),
+        map((response: any) => response.data),
+        tap((data) => this._companies.next(data)),
         catchError(error => {
           return this.formatErrors(error);
         })

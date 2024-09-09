@@ -13,9 +13,11 @@
                 <mat-form-field class="min-w-full" [floatLabel]="'always'">
                     <mat-label>Compañia</mat-label>
                     <mat-select formControlName="company" placeholder="Seleccione compañia">
-                        <!-- <mat-option *ngFor="let company of companies" [value]="company._id">
+                        @for (company of (companies$ | async); track company._id) {
+                        <mat-option [value]="company._id">
                             {{ company.comercialName }}
-                        </mat-option> -->
+                        </mat-option>
+                        }
                     </mat-select>
                 </mat-form-field>
             </div>
@@ -51,9 +53,11 @@
                 <mat-form-field class="min-w-full" [floatLabel]="'always'">
                     <mat-label>Estado</mat-label>
                     <mat-select formControlName="status" placeholder="Seleccione estado">
-                        <!-- <mat-option *ngFor="let status of statusList" [value]="status">
+                        @for (status of statusList; track status) {
+                        <mat-option [value]="status">
                             {{ status }}
-                        </mat-option> -->
+                        </mat-option>
+                        }
                     </mat-select>
                 </mat-form-field>
             </div>
@@ -65,9 +69,11 @@
                 <mat-form-field class="min-w-full" [floatLabel]="'always'">
                     <mat-label>Plazo pago</mat-label>
                     <mat-select formControlName="paymentDeadline" placeholder="Seleccione plazo pago">
-                        <!-- <mat-option *ngFor="let paymentDeadline of paymentDeadlines" [value]="paymentDeadline._id">
+                        @for (paymentDeadline of (paymentDeadlines$ | async); track paymentDeadline._id) {
+                        <mat-option [value]="paymentDeadline._id">
                             {{ paymentDeadline.description }}
-                        </mat-option> -->
+                        </mat-option>
+                        }
                     </mat-select>
                 </mat-form-field>
             </div>
@@ -75,9 +81,11 @@
                 <mat-form-field class="min-w-full" [floatLabel]="'always'">
                     <mat-label>Tipo pago</mat-label>
                     <mat-select formControlName="paymentMethod" placeholder="Seleccione documento">
-                        <!-- <mat-option *ngFor="let paymentMethod of paymentMethods" [value]="paymentMethod._id">
+                        @for (paymentMethod of (paymentMethods$ | async); track paymentMethod._id) {
+                        <mat-option [value]="paymentMethod._id">
                             {{ paymentMethod.description }}
-                        </mat-option> -->
+                        </mat-option>
+                        }
                     </mat-select>
                 </mat-form-field>
             </div>
@@ -98,22 +106,22 @@
                     <input formControlName="note" matInput [autocomplete]="'off'" [placeholder]="'Ingrese nota'" />
                 </mat-form-field>
             </div>
-            <!-- <ng-container *ngIf="id">
-                <div class="w-1/3 pr-2.5">
-                    <mat-form-field class="min-w-full" [floatLabel]="'always'">
-                        <mat-label>Fecha de emisión</mat-label>
-                        <input formControlName="createdAt" matInput [autocomplete]="'off'"
-                            [placeholder]="'Seleccione fecha'" />
-                    </mat-form-field>
-                </div>
-                <div class="w-1/3 pr-2.5">
-                    <mat-form-field class="min-w-full" [floatLabel]="'always'">
-                        <mat-label>Fecha de modificación</mat-label>
-                        <input formControlName="updatedAt" matInput [autocomplete]="'off'"
-                            [placeholder]="'00 / 00 / 0000'" />
-                    </mat-form-field>
-                </div>
-            </ng-container> -->
+            @if (id) {
+            <div class="w-1/3 pr-2.5">
+                <mat-form-field class="min-w-full" [floatLabel]="'always'">
+                    <mat-label>Fecha de emisión</mat-label>
+                    <input formControlName="createdAt" matInput [autocomplete]="'off'"
+                        [placeholder]="'Seleccione fecha'" />
+                </mat-form-field>
+            </div>
+            <div class="w-1/3 pr-2.5">
+                <mat-form-field class="min-w-full" [floatLabel]="'always'">
+                    <mat-label>Fecha de modificación</mat-label>
+                    <input formControlName="updatedAt" matInput [autocomplete]="'off'"
+                        [placeholder]="'00 / 00 / 0000'" />
+                </mat-form-field>
+            </div>
+            }
         </div>
     </div>
     <div class="relative flex-row flex-0 mx-2 p-0">
@@ -128,10 +136,10 @@
             </button>
         </div>
         <div class="relative flex flex-0">
-            <ng-container *ngIf="true; else noSaleNote">
-                <div class="w-full grid">
-                    <!-- Header -->
-                    <div class="
+            @if (true) {
+            <div class="w-full grid">
+                <!-- Header -->
+                <div class="
                             inventory-grid-create-edit
                             z-10
                             sticky
@@ -148,68 +156,64 @@
                             bg-gray-50
                             dark:bg-black dark:bg-opacity-5
                         " matSort matSortDisableClear>
-                        <div class="hidden md:block" [mat-sort-header]="'sku'">
-                            SKU
-                        </div>
-                        <div class="hidden sm:block" [mat-sort-header]="'productname'">
-                            Nombre de producto
-                        </div>
-                        <div class="hidden lg:block" [mat-sort-header]="'quantity'">
-                            Cantidad
-                        </div>
-                        <div class="hidden lg:block" [mat-sort-header]="'netprice'">
-                            Valor Unit x Item
-                        </div>
-                        <div class="hidden lg:block">
-                            Valor Venta x bruta
-                        </div>
-                        <div class="hidden lg:block">
-                            Descuento x item
-                        </div>
-                        <div class="hidden lg:block">
-                            Valor Venta x item
-                        </div>
-                        <div style="text-align: right" class="hidden lg:block" [mat-sort-header]="'totalprice'">
-                            IGV
-                        </div>
-                        <div style="text-align: center" class="hidden lg:block"></div>
+                    <div class="hidden md:block" [mat-sort-header]="'sku'">
+                        SKU
                     </div>
-                    <ng-container>
-                        <!-- <app-sale-note-item
-                            *ngFor="let voucher of voucherControls; index as i"
-                            [index]="i"
-                            [vouchersLength]="voucherControls.length"
-                            [voucher]="voucher"
-                            (saleNoteDeleted)="onDelete($event)"
-                            (quantityUpdated)="quantityUpdated($event)"
-                        ></app-sale-note-item> -->
-                    </ng-container>
-                    <div *ngIf="voucherControls.length > 0" class="flex justify-end mt-4">
-                        <!-- <app-summary-sale-note
-                        [form]="presenter.form"
-                       ></app-summary-sale-note> -->
+                    <div class="hidden sm:block" [mat-sort-header]="'productname'">
+                        Nombre de producto
                     </div>
-                    <div *ngIf="salesNoteInput?.voucherDetail.length > 0" class="flex justify-end mt-4">
+                    <div class="hidden lg:block" [mat-sort-header]="'quantity'">
+                        Cantidad
                     </div>
+                    <div class="hidden lg:block" [mat-sort-header]="'netprice'">
+                        Valor Unit x Item
+                    </div>
+                    <div class="hidden lg:block">
+                        Valor Venta x bruta
+                    </div>
+                    <div class="hidden lg:block">
+                        Descuento x item
+                    </div>
+                    <div class="hidden lg:block">
+                        Valor Venta x item
+                    </div>
+                    <div style="text-align: right" class="hidden lg:block" [mat-sort-header]="'totalprice'">
+                        IGV
+                    </div>
+                    <div style="text-align: center" class="hidden lg:block"></div>
                 </div>
-            </ng-container>
-            <ng-template #noSaleNote>
-                <div class="
-                        p-8
-                        sm:p-16
-                        border-t
-                        text-4xl
-                        font-semibold
-                        tracking-tight
-                        text-center
-                    ">
-                    No hay items!
+                <ng-container>
+                    @for (voucher of voucherControls; track voucher; let  i = $index) {
+                    <app-sale-note-item [index]="i" [vouchersLength]="voucherControls.length" [voucher]="voucher"
+                        (saleNoteDeleted)="onDelete($event)"
+                        (quantityUpdated)="quantityUpdated($event)"></app-sale-note-item>
+                    }
+                </ng-container>
+                @if (voucherControls.length > 0) {
+                <div class="flex justify-end mt-4">
+                    <!-- <app-summary-sale-note
+                            [form]="presenter.form"
+                           ></app-summary-sale-note> -->
                 </div>
-            </ng-template>
+                }
+            </div>
+            } @else {
+            <div class="
+                p-8
+                sm:p-16
+                border-t
+                text-4xl
+                font-semibold
+                tracking-tight
+                text-center
+            ">
+                No hay items!
+            </div>
+            }
         </div>
     </div>
 </div>
-<div class="fixed bottom-0 px-8 py-4 bg-white flex justify-end space-x-4 w-footer">
+<div class="px-8 py-4 bg-white flex justify-end space-x-4">
     <button mat-stroked-button (click)="cancel()">Cancelar</button>
     <button mat-flat-button [color]="'warn'" (click)="submitForm()" [disabled]="!form.valid">{{ id ? 'Actualizar' :
         'Crear' }}</button>

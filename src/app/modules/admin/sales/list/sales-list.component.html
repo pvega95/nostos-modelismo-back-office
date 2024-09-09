@@ -39,8 +39,8 @@
 
     <div class="flex flex-auto overflow-hidden">
         <div class="flex flex-col flex-auto sm:mb-18 overflow-hidden sm:overflow-y-auto">
-            @if (products$ | async; as products) {
-            @if (products.length > 0) {
+            @if (sales$ | async; as sales) {
+            @if (sales.length > 0) {
             <div class="grid">
                 <div class="inventory-grid z-10 sticky top-0 grid gap-4 py-4 px-6 md:px-8 shadow text-md font-semibold text-secondary bg-gray-50 dark:bg-black dark:bg-opacity-5"
                     matSort matSortDisableClear>
@@ -68,37 +68,37 @@
                     <div class="hidden md:block">Acciones</div>
                 </div>
 
-                @if (products$ | async; as products) {
+                @if (sales$ | async; as sales) {
                 @for (
-                product of products;
-                track trackByFn($index, product)
+                sale of sales;
+                track trackByFn($index, sale)
                 ) {
                 <div class="inventory-grid grid items-center gap-4 border-b px-6 py-3 md:px-8">
 
                     <!-- comercialName -->
                     <div class="hidden truncate md:block">
-                        {{ product.client.comercialName }}
+                        {{ sale.client.comercialName }}
                     </div>
 
                     <!-- document -->
                     <div class="hidden truncate md:block">
-                        {{ product.document.description }}
+                        {{ sale.document.description }}
                     </div>
 
                     <!-- serie -->
                     <div class="hidden truncate md:block">
-                        {{ product.serie }}
+                        {{ sale.serie }}
                     </div>
 
                     <!-- documentNumber -->
                     <div class="hidden truncate md:block">
-                        {{ product.documentNumber }}
+                        {{ sale.documentNumber }}
                     </div>
 
                     <!-- Price -->
                     <div class="hidden truncate md:block">
                         {{
-                        product.salesTotalNC
+                        sale.salesTotalNC
                         | currency
                         : 'USD'
                         : 'symbol'

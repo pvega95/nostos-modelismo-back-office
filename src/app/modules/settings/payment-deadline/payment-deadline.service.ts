@@ -33,9 +33,8 @@ import { PaymentDeadline } from 'app/models/payment-deadline';
     getListPaymentDeadline():  Observable<any> {
       const url = `${PaymentDeadlineService.BASE_URL}${PaymentDeadlineService.confManagement}/payment-term`;
       return this.http.get(url).pipe(
-        tap((response: any)=> {
-          this._paymentDeadlines.next(response);
-        }),
+        map((response: any) => response.data),
+        tap((data) => this._paymentDeadlines.next(data)),
         catchError(error => {
           return this.formatErrors(error);
         })

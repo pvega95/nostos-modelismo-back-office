@@ -3,7 +3,7 @@ import { SalesService } from './sales.service';
 import { inject } from '@angular/core';
 import { SalesComponent } from './sales.component';
 import { SalesCreateUpdateComponent } from './create-update/sales-create-update.tcomponen';
-import { SalesListComponent } from './list/sales.component';
+import { SalesListComponent } from './list/sales-list.component';
 import { CompanyService } from 'app/modules/settings/company/company.service';
 import { DocumentService } from 'app/modules/settings/document/document.service';
 import { PaymentDeadlineService } from 'app/modules/settings/payment-deadline/payment-deadline.service';
