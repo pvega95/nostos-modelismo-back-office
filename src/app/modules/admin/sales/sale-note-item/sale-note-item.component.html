@@ -1,0 +1,62 @@
+<ng-container [formGroup]="voucher">
+    <div
+        class="
+            hightlightRow
+            z-11
+            inventory-grid-create-edit
+            grid
+            items-center
+            gap-4
+            py-3
+            px-6
+            md:px-8
+            border-b
+        "
+    >
+        <div class="">
+            {{ sku }}
+        </div>
+        <div class="">
+            <span>
+                {{ name }}
+            </span>
+        </div>
+
+        <div class="">
+            <input class="w-28" formControlName="quantity" type="number"/>
+        </div>
+
+        <div class="">
+            {{ unitaryAmountNC | number: "1.2-2" }}
+        </div>
+
+        <div class="">
+            {{ brutoAmountNC | number: "1.2-2" }}
+        </div>
+
+        <div class="">
+            {{ discountAmountNC | number: "1.2-2" }}
+        </div>
+
+        <div class="">
+            {{ salesAmountNC | number: "1.2-2" }}
+        </div>
+
+        <div class="">
+            {{ igvAmountNC | number: "1.2-2" }}
+        </div>
+        <div class="" style="text-align: center">
+            <button
+                class="z-11 min-w-10 min-h-7 h-7 px-2 leading-6"
+
+                matTooltip="Eliminar ítem"
+                (click)="saleNoteDeleted.emit(index)"
+            >
+                <mat-icon
+                    class="icon-size-5 deleteIcon"
+                    [svgIcon]="'heroicons_solid:trash'"
+                ></mat-icon>
+            </button>
+        </div>
+    </div>
+</ng-container>
