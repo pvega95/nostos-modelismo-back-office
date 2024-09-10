@@ -8,6 +8,8 @@ import { MatInputModule } from "@angular/material/input";
 import { MatTableDataSource, MatTableModule } from "@angular/material/table";
 import { ProductsService } from "../../products/products.service";
 import { DecimalPipe } from "@angular/common";
+import { MatCheckboxModule } from "@angular/material/checkbox";
+import { Product } from "app/models/product";
 
 @Component({
     selector: 'app-sales-modal',
@@ -22,6 +24,7 @@ import { DecimalPipe } from "@angular/common";
         MatTableModule,
         MatFormFieldModule,
         MatInputModule,
+        MatCheckboxModule,
         FormsModule,
         ReactiveFormsModule,
         DecimalPipe
@@ -66,6 +69,48 @@ export class SalesModalComponent implements OnInit {
         } else {
             return false;
         }
+    }
+
+    isAllSelected() {
+        const numSelected = this.selection.length;
+        const numRows = this.dataSource.data.length;
+        return numSelected === numRows;
+    }
+
+    masterToggle() {
+        if (this.isAllSelected()) {
+            //  this.selection.clear();
+            // console.log('this.dataSource.data', this.dataSource.data)
+            this.dataSource.data.forEach(element => {
+                if (!element.selected && element.checked) {
+                    element.checked = false;
+                }
+            });
+            this.selection = [];
+            return;
+        }
+        this.dataSource.data.forEach(element => {
+            if (!element.selected && !element.checked) {
+                element.checked = true;
+            }
+        });
+        this.selection.push(...this.dataSource.data);
+    }
+
+    toggleItem(product: Product) {
+        const index = this.selection.findIndex(obj => obj.sku == product.sku);
+        // console.log('product', product, index)
+        if (index !== -1) {
+            this.selection.splice(index, 1);// quita elemento de lista
+        } else {
+            this.selection.push(product);//agrega elemento de lista
+        }
+        const index2 = this.dataSource.data.findIndex(obj => obj.sku == product.sku);
+        this.dataSource.data[index2].checked = !this.dataSource.data[index2].checked // desmarca elemento de lista
+    }
+
+    addItem(): void {
+        this.dialogRef.close(this.selection);
     }
 
     get productsObs() {

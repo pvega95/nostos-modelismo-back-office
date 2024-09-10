@@ -1,11 +1,18 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { DecimalPipe } from '@angular/common';
+import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-summary-sale-note',
     templateUrl: './summary-sale-note.component.html',
-    // styles: [``],
+    encapsulation: ViewEncapsulation.None,
+    standalone: true,
+    imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        DecimalPipe
+    ],
 })
 export class SummarySaleNoteComponent implements OnInit {
     @Input() form: FormGroup;
@@ -18,6 +25,7 @@ export class SummarySaleNoteComponent implements OnInit {
     deliveryAmount: number;
     subscriptionProducts: Subscription;
     ngOnInit(): void {
+        console.log(this.form)
         this.calculationTotals(this.products.getRawValue());
         this.setDelivery(this.deliveryForm.get('price').value);
         this.subscriptionProducts = this.products.valueChanges.subscribe(
@@ -42,9 +50,9 @@ export class SummarySaleNoteComponent implements OnInit {
     }
 
     calculationTotals(products: any[]): void {
-        this.totalGrossNC = products.reduce((a, b) => a + b.unitaryAmountNC * b.quantity , 0);
-        this.totalDiscountNC = products.reduce((a, b) => a + (b.unitaryAmountNC * b.quantity) * ( b.discount / 100 ) , 0);
-        this.totalOperationGravNC = products.reduce((a, b) => a + b.brutoAmountNC - b.discountAmountNC , 0);
+        this.totalGrossNC = products.reduce((a, b) => a + b.unitaryAmountNC * b.quantity, 0);
+        this.totalDiscountNC = products.reduce((a, b) => a + (b.unitaryAmountNC * b.quantity) * (b.discount / 100), 0);
+        this.totalOperationGravNC = products.reduce((a, b) => a + b.brutoAmountNC - b.discountAmountNC, 0);
         // this.totalOperationGravNC = this.totalGrossNC - this.totalDiscountNC;
         this.totalOperationExonNC = 0;
         this.totalIGV = products.reduce((a, b) => a + b.igvAmountNC, 0);

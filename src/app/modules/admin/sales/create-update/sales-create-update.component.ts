@@ -22,11 +22,14 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, JsonPipe } from '@angular/common';
 import { DocumentService } from 'app/modules/settings/document/document.service';
 import { PaymentDeadlineService } from 'app/modules/settings/payment-deadline/payment-deadline.service';
 import { PaymentMethodService } from 'app/modules/settings/payment-method/payment-method.service';
 import { SalesModalComponent } from '../modal/sales-modal.component';
+import { SaleNoteItemComponent } from '../sale-note-item/sale-note-item.component';
+import { SummarySaleNoteComponent } from '../summary-sale-note/summary-sale-note.component';
+import { SalesService } from '../sales.service';
 
 @Component({
     selector: 'sales-create-update',
@@ -36,6 +39,8 @@ import { SalesModalComponent } from '../modal/sales-modal.component';
     standalone: true,
     providers: [SaleNotePresenter],
     imports: [
+        SaleNoteItemComponent,
+        SummarySaleNoteComponent,
         MatFormFieldModule,
         MatIconModule,
         MatInputModule,
@@ -44,7 +49,7 @@ import { SalesModalComponent } from '../modal/sales-modal.component';
         ReactiveFormsModule,
         MatButtonModule,
         AsyncPipe,
-        RouterModule
+        RouterModule,
     ],
     styles: [
     `
@@ -98,7 +103,7 @@ export class SalesCreateUpdateComponent {
         private _documentService: DocumentService,
         private _paymentDeadlineService: PaymentDeadlineService,
         private _paymentMethodService: PaymentMethodService,
-        // private saleNoteService: SaleNoteService,
+        private _salesService: SalesService,
         public dialog: MatDialog,
         public presenter: SaleNotePresenter,
         private _changeDetectorRef: ChangeDetectorRef,
@@ -215,12 +220,12 @@ export class SalesCreateUpdateComponent {
         if (this.id) {
             return;
         }
-        // this.saleNoteService
-        //     .getSerie(companyID, documentID)
-        //     .pipe(map((response: any) => response?.data[0]))
-        //     .subscribe(({ series, currentCorrelative }) => {
-        //         this.presenter.updateSeriesForm(series, currentCorrelative);
-        //     });
+        this._salesService
+            .getSerie(companyID, documentID)
+            .pipe(map((response: any) => response?.data[0]))
+            .subscribe(({ series, currentCorrelative }) => {
+                this.presenter.updateSeriesForm(series, currentCorrelative);
+            });
     }
 
     addItem(): void {
@@ -231,12 +236,13 @@ export class SalesCreateUpdateComponent {
                 voucherDetail: this.presenter.voucherDetail.getRawValue(),
             }
         });
-        // dialogRef.afterClosed().subscribe((products: Product[]) => {
-        //     if (products) {
-        //         this.presenter.addVoucherDetails(products);
-        //         this.presenter.updateSaleNoteTotals();
-        //     }
-        // });
+        dialogRef.afterClosed().subscribe((products: Product[]) => {
+            if (products) {
+                this.presenter.addVoucherDetails(products);
+                this.presenter.updateSaleNoteTotals();
+                this._changeDetectorRef.detectChanges();
+            }
+        });
     }
 
     onDelete(index: number): void {
@@ -253,6 +259,10 @@ export class SalesCreateUpdateComponent {
 
     cancel(): void {
         this.router.navigate(['sales']);
+    }
+
+    showInfoClient(): void {
+        return
     }
 
     submitForm(): void {

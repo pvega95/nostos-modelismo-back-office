@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import { SalesService } from './sales.service';
 import { inject } from '@angular/core';
 import { SalesComponent } from './sales.component';
-import { SalesCreateUpdateComponent } from './create-update/sales-create-update.tcomponen';
+import { SalesCreateUpdateComponent } from './create-update/sales-create-update.component';
 import { SalesListComponent } from './list/sales-list.component';
 import { CompanyService } from 'app/modules/settings/company/company.service';
 import { DocumentService } from 'app/modules/settings/document/document.service';

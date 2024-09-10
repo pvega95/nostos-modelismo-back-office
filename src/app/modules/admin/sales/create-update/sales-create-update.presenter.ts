@@ -23,6 +23,7 @@ export class SaleNotePresenter {
     company: FormControl;
     document: FormControl;
     serie: FormControl;
+    documentSerie: FormControl;
     documentNumber: FormControl;
     registryDate: FormControl;
     paymentDeadline: FormControl;
@@ -30,6 +31,7 @@ export class SaleNotePresenter {
     status: FormControl;
     reference: FormControl;
     note: FormControl;
+    deliveryPrice: FormControl;
     dispatchStatus: FormControl;
     voucherDetail: FormArray;
     brutoTotalNC: FormControl;
@@ -41,9 +43,17 @@ export class SaleNotePresenter {
     createdAt: FormControl;
     updatedAt: FormControl;
 
+    comercialName: FormControl;
+    email: FormControl;
+    numberDocument: FormControl;
+    phone: FormControl;
+    typeDocument: FormControl;
+
+    price: FormControl;
+    address: FormControl;
+
     constructor(
-        protected fb: FormBuilder,
-        private fuseUtilsService: FuseUtilsService
+        protected fb: FormBuilder
         ) {
         this.createValidators();
         this.createForm();
@@ -52,25 +62,35 @@ export class SaleNotePresenter {
     createForm(): void {
         this.form = this.fb.group({
             _id: this._id,
-            client: this.client,
+            client: this.fb.group({
+                typeDocument: this.typeDocument,
+                numberDocument: this.numberDocument,
+                comercialName: this.comercialName,
+                phone: this.phone,
+                email: this.email,
+            }),
+            delivery: this.fb.group({
+                price: this.price,
+                address: this.address,
+            }),
             company: this.company,
             document: this.document,
+            documentSerie: this.documentSerie,
             serie: this.serie,
             documentNumber: this.documentNumber,
-            registryDate: this.registryDate,
             paymentDeadline: this.paymentDeadline,
             paymentMethod: this.paymentMethod,
             status: this.status,
             reference: this.reference,
             note: this.note,
             dispatchStatus: this.dispatchStatus,
-            voucherDetail: this.voucherDetail,
             brutoTotalNC: this.brutoTotalNC,
             discountTotalNC: this.discountTotalNC,
             gravTotalNC: this.gravTotalNC,
             exonTotalNC: this.exonTotalNC,
             igvTotalNC: this.igvTotalNC,
             salesTotalNC: this.salesTotalNC,
+            voucherDetail: this.voucherDetail,
             createdAt: this.createdAt,
             updatedAt: this.updatedAt,
         });
@@ -253,25 +273,31 @@ export class SaleNotePresenter {
 
     private createValidators(): void {
         this._id = new FormControl('');
-        this.client = new FormControl('', [Validators.required]);
+        this.typeDocument = new FormControl(null);
+        this.numberDocument = new FormControl('');
+        this.comercialName = new FormControl('');
+        this.phone = new FormControl('');
+        this.email = new FormControl('', [ Validators.pattern('[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}')]);
+        this.price = new FormControl(0);
+        this.address = new FormControl('');
         this.company = new FormControl('', [Validators.required]);
         this.document = new FormControl('', [Validators.required]);
+        this.documentSerie =  new FormControl('');
         this.serie = new FormControl({ value: '', disabled: true });
         this.documentNumber = new FormControl({ value: '', disabled: true });
-        this.registryDate = new FormControl('');
         this.paymentDeadline = new FormControl('', [Validators.required]);
         this.paymentMethod = new FormControl('');
         this.status = new FormControl('PENDIENTE');
         this.reference = new FormControl('');
         this.note = new FormControl('');
         this.dispatchStatus = new FormControl('PENDIENTE');
-        this.voucherDetail = new FormArray([], [Validators.required]);
         this.brutoTotalNC = new FormControl(0);
         this.discountTotalNC = new FormControl(0);
         this.gravTotalNC = new FormControl(0);
         this.exonTotalNC = new FormControl(0);
         this.igvTotalNC = new FormControl(0);
         this.salesTotalNC = new FormControl(0);
+        this.voucherDetail = new FormArray([], [Validators.required]);
         this.createdAt = new FormControl('');
         this.updatedAt = new FormControl('');
     }
