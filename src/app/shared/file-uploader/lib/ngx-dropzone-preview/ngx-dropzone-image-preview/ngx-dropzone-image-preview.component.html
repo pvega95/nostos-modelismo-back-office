@@ -1,0 +1,15 @@
+<div class="flex justify-between w-48 h-12">
+    <div class="w-12 pb-1/2 bg-purple-300">
+        <img class="h-full	object-cover" [src]="imageSrc" />
+    </div>
+    <div class="w-32 flex flex-col">
+        <p class="text-sm truncate">{{ file.name }}</p>
+        <div class="flex items-center">
+            <div class="rounded bg-indigo-500 w-28 h-1 mr-2"></div>
+            <svg class="cursor-pointer w-auto" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" (click)="_remove($event)">
+                <path d="M3.37048 11.8557L4.11802 12.6033L8.01311 8.69506L11.9213 12.6033L12.6295 11.8951L8.7213 7.98686L12.6295 4.09178L11.882 3.34424L7.98688 7.25243L4.07868 3.34424L3.37048 4.05243L7.27868 7.96063L3.37048 11.8557Z" fill="#677489"/>
+            </svg>
+        </div>
+        <p class="text-xs">{{ transformFileSize(file.size) }}</p>
+    </div>
+</div>

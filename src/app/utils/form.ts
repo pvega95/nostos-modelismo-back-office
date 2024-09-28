@@ -17,3 +17,20 @@ export function sinEspaciosEnBlanco(control: AbstractControl) : ValidationErrors
     }
 
 }
+/**
+ * @description retira las tildes de un string
+ * @param value string
+ * @returns string
+ */
+export const parseStringSinTildes = (value: string): string => {
+    const accent_map = {'á':'a', 'é':'e', 'è':'e', 'í':'i','ó':'o','ú':'u','Á':'a', 'É':'e', 'Í':'i','Ó':'o','Ú':'u'};
+    let valueParse: string = '';
+
+    if (!value) { return ''; }
+
+    for (var i = 0; i < value.length; i++) {
+        valueParse += accent_map[value.charAt(i)] || value.charAt(i);
+    }
+
+  return valueParse;
+}
