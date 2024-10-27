@@ -16,7 +16,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertComponent, FuseAlertType } from '@fuse/components/alert';
+import { TranslocoModule, TranslocoService } from '@ngneat/transloco';
 import { AuthService } from 'app/core/auth/auth.service';
+import { take } from 'rxjs';
 
 @Component({
     selector: 'auth-sign-in',
@@ -35,6 +37,7 @@ import { AuthService } from 'app/core/auth/auth.service';
         MatIconModule,
         MatCheckboxModule,
         MatProgressSpinnerModule,
+        TranslocoModule
     ],
 })
 export class AuthSignInComponent implements OnInit {
@@ -46,6 +49,7 @@ export class AuthSignInComponent implements OnInit {
     };
     signInForm: UntypedFormGroup;
     showAlert: boolean = false;
+    alertMessageError: string = "";
 
     /**
      * Constructor
@@ -54,7 +58,8 @@ export class AuthSignInComponent implements OnInit {
         private _activatedRoute: ActivatedRoute,
         private _authService: AuthService,
         private _formBuilder: UntypedFormBuilder,
-        private _router: Router
+        private _router: Router,
+        private _translocoService: TranslocoService
     ) {}
 
     // -----------------------------------------------------------------------------------------------------
@@ -73,6 +78,12 @@ export class AuthSignInComponent implements OnInit {
             ],
             password: ['admin', Validators.required],
             rememberMe: [''],
+        });
+        this._translocoService
+        .selectTranslate('wrong-email-or-password')
+        .pipe(take(1))
+        .subscribe((translation) => {
+            this.alertMessageError = translation;
         });
     }
 
@@ -120,7 +131,7 @@ export class AuthSignInComponent implements OnInit {
                 // Set the alert
                 this.alert = {
                     type: 'error',
-                    message: 'Wrong email or password',
+                    message: this.alertMessageError,
                 };
 
                 // Show the alert

@@ -62,7 +62,7 @@ export class LanguagesComponent implements OnInit, OnDestroy {
         // Set the country iso codes for languages for flags
         this.flagCodes = {
             en: 'us',
-            tr: 'tr',
+            es: 'pe'
         };
     }
 
@@ -159,6 +159,84 @@ export class LanguagesComponent implements OnInit, OnDestroy {
                     analyticsDashboardItem.title = translation;
 
                     // Refresh the navigation component
+                    navComponent.refresh();
+                });
+        }
+        const exampleId = this._fuseNavigationService.getItem(
+            'example.id',
+            navigation
+        );
+        if (exampleId) {
+            this._translocoService
+                .selectTranslate('example')
+                .pipe(take(1))
+                .subscribe((translation) => {
+                    exampleId.title = translation;
+                    navComponent.refresh();
+                });
+        }
+        const orderId = this._fuseNavigationService.getItem(
+            'order.id',
+            navigation
+        );
+        if (orderId) {
+            this._translocoService
+                .selectTranslate('order')
+                .pipe(take(1))
+                .subscribe((translation) => {
+                    orderId.title = translation;
+                    navComponent.refresh();
+                });
+        }
+        const saleId = this._fuseNavigationService.getItem(
+            'sale.id',
+            navigation
+        );
+        if (saleId) {
+            this._translocoService
+                .selectTranslate('sale')
+                .pipe(take(1))
+                .subscribe((translation) => {
+                    saleId.title = translation;
+                    navComponent.refresh();
+                });
+        }
+        const invoiceId = this._fuseNavigationService.getItem(
+            'invoice.id',
+            navigation
+        );
+        if (invoiceId) {
+            this._translocoService
+                .selectTranslate('invoice')
+                .pipe(take(1))
+                .subscribe((translation) => {
+                    invoiceId.title = translation;
+                    navComponent.refresh();
+                });
+        }
+        const settingId = this._fuseNavigationService.getItem(
+            'setting.id',
+            navigation
+        );
+        if (settingId) {
+            this._translocoService
+                .selectTranslate('setting')
+                .pipe(take(1))
+                .subscribe((translation) => {
+                    settingId.title = translation;
+                    navComponent.refresh();
+                });
+        }
+        const settingProductsId = this._fuseNavigationService.getItem(
+            'setting.products.id',
+            navigation
+        );
+        if (settingProductsId) {
+            this._translocoService
+                .selectTranslate('products')
+                .pipe(take(1))
+                .subscribe((translation) => {
+                    settingProductsId.title = translation;
                     navComponent.refresh();
                 });
         }

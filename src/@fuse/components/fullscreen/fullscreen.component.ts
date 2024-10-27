@@ -3,6 +3,7 @@ import {
     ChangeDetectionStrategy,
     Component,
     Input,
+    OnInit,
     TemplateRef,
     ViewEncapsulation,
     inject,
@@ -10,6 +11,8 @@ import {
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { TranslocoService } from '@ngneat/transloco';
+import { take } from 'rxjs';
 
 @Component({
     selector: 'fuse-fullscreen',
@@ -25,11 +28,23 @@ import { MatTooltipModule } from '@angular/material/tooltip';
         MatIconModule,
     ],
 })
-export class FuseFullscreenComponent {
+export class FuseFullscreenComponent implements OnInit {
     private _document = inject(DOCUMENT);
 
     @Input() iconTpl: TemplateRef<any>;
     @Input() tooltip: string;
+
+    constructor(private _translocoService: TranslocoService) {
+        //
+    }
+    ngOnInit(): void {
+        this._translocoService
+        .selectTranslate('toggle-fullscreen')
+        .pipe()
+        .subscribe((translation) => {
+            this.tooltip = translation;
+        });
+    }
 
     // -----------------------------------------------------------------------------------------------------
     // @ Public methods
