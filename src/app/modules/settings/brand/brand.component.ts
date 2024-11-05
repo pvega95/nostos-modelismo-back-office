@@ -1,4 +1,3 @@
-//import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import {
     FormBuilder,
@@ -6,17 +5,53 @@ import {
     FormGroup,
     Validators,
 } from '@angular/forms';
-//import { fuseAnimations } from '@fuse/animations';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { Brand } from 'app/models/brand';
 import { BrandService } from './brand.service';
 import { FuseUtilsService } from '@fuse/services/utils';
 import { debounceTime, Subject, switchMap, takeUntil } from 'rxjs';
-import { parseStringSinTildes } from 'app/utils/form';
+import { parseStringWithoutAccents } from 'app/utils/form';
+import { RouterModule } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSortModule } from '@angular/material/sort';
+import { MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { TranslocoModule } from '@ngneat/transloco';
+import { IMaskModule } from 'angular-imask';
+import { SharedModule } from 'app/shared/shared.module';
+import { NgApexchartsModule } from 'ng-apexcharts';
 
 @Component({
     selector: 'app-brand',
     templateUrl: './brand.component.html',
+    standalone: true,
+    imports: [
+        RouterModule,
+        MatInputModule,
+        MatProgressSpinnerModule,
+        IMaskModule,
+        MatFormFieldModule,
+        TranslocoModule,
+        MatButtonModule,
+        MatButtonToggleModule,
+        MatDividerModule,
+        MatIconModule,
+        MatMenuModule,
+        MatProgressBarModule,
+        MatSortModule,
+        MatTableModule,
+        MatTooltipModule,
+        NgApexchartsModule,
+        SharedModule
+    ],
     styles: [
         /* language=SCSS */
         `
@@ -37,7 +72,7 @@ import { parseStringSinTildes } from 'app/utils/form';
             }
         `,
     ],
-   // animations: fuseAnimations,
+   
 })
 export class BrandComponent implements OnInit {
     public brands: Brand[] = [];
@@ -54,11 +89,10 @@ export class BrandComponent implements OnInit {
 
     private _unsubscribeAll: Subject<void> = new Subject<void>();
     constructor(
-        private fuseUtilsService: FuseUtilsService,
-        private brandService: BrandService,
-        private _formBuilder: FormBuilder,
-        private _fuseConfirmationService: FuseConfirmationService,
-      //  private _changeDetectorRef: ChangeDetectorRef
+        private  fuseUtilsService: FuseUtilsService,
+        private  brandService: BrandService,
+        private  _formBuilder: FormBuilder,
+        private  _fuseConfirmationService: FuseConfirmationService,
     ) {}
 
     ngOnDestroy(): void {
@@ -80,11 +114,11 @@ export class BrandComponent implements OnInit {
                  this.brandsFiltered = this.brands.filter(
                     (unid) => {
                         return (
-                            parseStringSinTildes(
+                            parseStringWithoutAccents(
                             (unid.description as string)
                                 .toLowerCase())
                                 .match(query) ||
-                                parseStringSinTildes(
+                                parseStringWithoutAccents(
                             (unid.abreviation as string)
                                 .toLowerCase())
                                 .match(query)
@@ -124,7 +158,6 @@ export class BrandComponent implements OnInit {
             createdAt: '',
             updatedAt: '',
         });
-      //  this._changeDetectorRef.markForCheck();
         this.brandsFiltered = this.brands;
         this.canDisableButtonAddNewBrand = true;
         this.searchInputControl.setValue('',{emitEvent: false});
@@ -137,7 +170,7 @@ export class BrandComponent implements OnInit {
     loadListBrand(): void {
         this.canDisableButtonAddNewBrand = false;
         this.isLoading = true;
-        this.brandService.listarMarca().subscribe((resp) => {
+        this.brandService.getListBrand().subscribe((resp) => {
             if (resp.ok) {
                 this.brands = resp.data;
                 this.brandsFiltered = this.brands;
@@ -157,7 +190,6 @@ export class BrandComponent implements OnInit {
         }
         this.successMessage = '';
         this.seeMessage = false;
-        // this.initForm();
         // Get the company by id
         const brandFounded =
             this.brands.find((item: Brand) => item._id === brandId) || null;
@@ -193,7 +225,7 @@ export class BrandComponent implements OnInit {
         this.selectedBrandForm = this._formBuilder.group({
             id: [''],
             description: ['',
-                [Validators.required, FuseUtilsService.sinEspaciosEnBlanco],
+                [Validators.required, FuseUtilsService.withoutBlankSpaces],
             ],
             abreviation: [''],
             createdAt: [''],
@@ -206,7 +238,7 @@ export class BrandComponent implements OnInit {
     createNewBrand(): void {
         this.isLoading = true;
         const brand = this.selectedBrandForm.value;
-        this.brandService.crearMarca(brand).subscribe((resp) => {
+        this.brandService.createBrand(brand).subscribe((resp) => {
             this.flashMessage = resp.ok;
             this.seeMessage = true;
             if (resp.ok) {
@@ -227,7 +259,7 @@ export class BrandComponent implements OnInit {
     updateSelectedBrand(id: string): void {
         this.isLoading = true;
         const brand = this.selectedBrandForm.value;
-        this.brandService.editarMarca(id, brand).subscribe((resp) => {
+        this.brandService.editBrand(id, brand).subscribe((resp) => {
             this.flashMessage = resp.ok;
             this.seeMessage = true;
             if (resp.ok) {
@@ -260,7 +292,7 @@ export class BrandComponent implements OnInit {
         confirmation.afterClosed().subscribe((result) => {
             if (result === 'confirmed' ) {
               if(id !== '-1'){
-                this.brandService.eliminarMarca(id).subscribe((resp) => {
+                this.brandService.deleteBrand(id).subscribe((resp) => {
                   this.flashMessage = resp.ok;
                   this.seeMessage = true;
                   if (resp.ok) {

@@ -9,32 +9,30 @@ import { Observable } from 'rxjs';
 
 export class BrandService {
   static readonly BASE_URL = `${environment.backendURL}`;
-    static readonly confManagement = 'configuration-management';
+    static readonly configManagement = 'configuration-management';
 
-  constructor(private _http: HttpClient) {}
+  constructor(private readonly _http: HttpClient) {}
 
-  listarMarca(): Observable<any> {
-    const query = `${BrandService.BASE_URL}/${BrandService.confManagement}/brand`;
+  getListBrand(): Observable<any> {
+    const query = `${BrandService.BASE_URL}/${BrandService.configManagement}/brand`;
     return this._http.get(query);
   }
 
-  crearMarca(body: any): Observable<any> {
-    const query = `${BrandService.BASE_URL}/${BrandService.confManagement}/brand`;
+  createBrand(body: any): Observable<any> {
+    const query = `${BrandService.BASE_URL}/${BrandService.configManagement}/brand`;
     const data = body;
     return this._http.post(query, data);
   }
 
-  editarMarca(id: string, body: any): Observable<any> {
-    const query = `${BrandService.BASE_URL}/${BrandService.confManagement}/brand/${id}`;
+  editBrand(id: string, body: any): Observable<any> {
+    const query = `${BrandService.BASE_URL}/${BrandService.configManagement}/brand/${id}`;
     const data = body;
     return this._http.put(query, data);
   }
 
-  eliminarMarca(id: string): Observable<any> {
-    const query = `${BrandService.BASE_URL}/${BrandService.confManagement}/brand/${id}`;
+  deleteBrand(id: string): Observable<any> {
+    const query = `${BrandService.BASE_URL}/${BrandService.configManagement}/brand/${id}`;
     return this._http.delete(query);;
   }
-
-
 
 }

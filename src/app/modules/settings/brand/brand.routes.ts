@@ -1,10 +1,8 @@
-import { Route } from '@angular/router';
 import { BrandComponent } from './brand.component';
 
-export const brandRoutes: Route[] = [
+export default [
     {
         path     : '',
         component: BrandComponent,
-
     }
 ];

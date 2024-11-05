@@ -132,7 +132,7 @@ export class PaymentMethodComponent implements OnInit {
   initForm() {
     this.selectedPaymentMethodForm = this._formBuilder.group({
         _id               : ['-1'],
-        description      : ['', [Validators.required, Validators.minLength(2), FuseUtilsService.sinEspaciosEnBlanco]],
+        description      : ['', [Validators.required, Validators.minLength(2), FuseUtilsService.withoutBlankSpaces]],
         createdDate      : [''],
         updatedDate      : ['']
     });

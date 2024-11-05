@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
 import { IsActiveMatchOptions } from '@angular/router';
 import { AbstractControl, ValidationErrors } from '@angular/forms';
-//import { Select } from 'app/models';
 import { BehaviorSubject, Observable } from 'rxjs';
 @Injectable({ providedIn: 'root' })
 export class FuseUtilsService {
-    private idClient$: BehaviorSubject<any> = new BehaviorSubject(null);
+    private idClient$: BehaviorSubject<string> = new BehaviorSubject(null);
     /**
      * Constructor
      */
@@ -17,7 +16,7 @@ export class FuseUtilsService {
     // @ Accessors
     // -----------------------------------------------------------------------------------------------------
 
-    getIdClient(): Observable<any> {
+    getIdClient(): Observable<string> {
         return this.idClient$.asObservable();
       }
     
@@ -91,14 +90,14 @@ export class FuseUtilsService {
         if (day.length < 2) {
         day = '0' + day;
         }
-        //return [year, month, day].join('-');
+        
         return [day, month, year].join('/');
       }
      formatDateOut(fecha: string): string{
          return this.formatDate(this.stringToDate(fecha))
        }
 
-      static sinEspaciosEnBlanco(control: AbstractControl) : ValidationErrors | null {
+      static withoutBlankSpaces(control: AbstractControl) : ValidationErrors | null {
         if(control.value != null){
             if (typeof(control.value) === 'number') {
                 if((control.value as number).toString().trim().length > 0){
@@ -109,7 +108,7 @@ export class FuseUtilsService {
                     return null;
                 }          
             }
-            return {sinEspaciosEnBlanco: true};
+            return {withoutBlankSpaces: true};
         }else{
             return null;
         }
