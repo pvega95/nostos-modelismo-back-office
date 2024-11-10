@@ -3,6 +3,8 @@ import {
     FormBuilder,
     FormControl,
     FormGroup,
+    FormsModule,
+    ReactiveFormsModule,
     Validators,
 } from '@angular/forms';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
@@ -26,8 +28,14 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { TranslocoModule } from '@ngneat/transloco';
 import { IMaskModule } from 'angular-imask';
-import { SharedModule } from 'app/shared/shared.module';
 import { NgApexchartsModule } from 'ng-apexcharts';
+import { ScrollingModule } from '@angular/cdk/scrolling';
+import { CommonModule } from '@angular/common';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSelectModule } from '@angular/material/select';
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 
 @Component({
     selector: 'app-brand',
@@ -50,7 +58,23 @@ import { NgApexchartsModule } from 'ng-apexcharts';
         MatTableModule,
         MatTooltipModule,
         NgApexchartsModule,
-        SharedModule
+        CommonModule,
+        MatSelectModule,
+        MatTooltipModule,
+        MatFormFieldModule,
+        MatPaginatorModule,
+        MatCheckboxModule,
+        MatInputModule,
+        MatTableModule,
+        ScrollingModule,
+        NgxMatSelectSearchModule,
+        FormsModule,
+        MatProgressBarModule,
+        MatDialogModule,
+        MatIconModule,
+        MatButtonModule,
+        ReactiveFormsModule,
+        MatProgressSpinnerModule,
     ],
     styles: [
         /* language=SCSS */
