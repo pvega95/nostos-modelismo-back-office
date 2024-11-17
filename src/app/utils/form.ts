@@ -1,6 +1,6 @@
 import { AbstractControl, ValidationErrors } from "@angular/forms";
 
-export function sinEspaciosEnBlanco(control: AbstractControl) : ValidationErrors | null {
+export function withoutBlankSpaces(control: AbstractControl) : ValidationErrors | null {
     if(control.value != null){
         if (typeof(control.value) === 'number') {
             if((control.value as number).toString().trim().length > 0){
@@ -11,9 +11,26 @@ export function sinEspaciosEnBlanco(control: AbstractControl) : ValidationErrors
                 return null;
             }
         }
-        return {sinEspaciosEnBlanco: true};
+        return {withoutBlankSpaces: true};
     }else{
         return null;
     }
 
+}
+/**
+ * @description retira las tildes de un string
+ * @param value string
+ * @returns string
+ */
+export const parseStringWithoutAccents = (value: string): string => {
+    const accent_map = {'á':'a', 'é':'e', 'è':'e', 'í':'i','ó':'o','ú':'u','Á':'a', 'É':'e', 'Í':'i','Ó':'o','Ú':'u'};
+    let valueParse: string = '';
+
+    if (!value) { return ''; }
+
+    for (var i = 0; i < value.length; i++) {
+        valueParse += accent_map[value.charAt(i)] || value.charAt(i);
+    }
+
+  return valueParse;
 }

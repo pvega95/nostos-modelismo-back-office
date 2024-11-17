@@ -8,7 +8,7 @@ import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { fuseAnimations } from '@fuse/animations';
 import { Document } from 'app/models/document';
 import { FuseUtilsService } from '@fuse/services/utils';
-import { sinEspaciosEnBlanco } from 'app/utils/form';
+import { withoutBlankSpaces } from 'app/utils/form';
 
 @Component({
   selector: 'app-document',
@@ -134,9 +134,9 @@ export class DocumentComponent implements OnInit {
   initForm() {
     this.selectedDocumentForm = this._formBuilder.group({
         _id               : ['-1'],
-        description      : ['', [Validators.required, Validators.minLength(2),  sinEspaciosEnBlanco]],
-        abreviation      : ['',[Validators.required, Validators.minLength(2),  sinEspaciosEnBlanco]],
-        typeDocument     : ['',[Validators.required, Validators.minLength(2),  sinEspaciosEnBlanco]],
+        description      : ['', [Validators.required, Validators.minLength(2),  withoutBlankSpaces]],
+        abreviation      : ['',[Validators.required, Validators.minLength(2),  withoutBlankSpaces]],
+        typeDocument     : ['',[Validators.required, Validators.minLength(2),  withoutBlankSpaces]],
     });
   }
 

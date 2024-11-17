@@ -3,46 +3,67 @@ import { FuseNavigationItem } from '@fuse/components/navigation';
 
 export const defaultNavigation: FuseNavigationItem[] = [
     {
-        id   : 'example',
+        id   : 'example.id',
         title: 'Example',
         type : 'basic',
         icon : 'heroicons_outline:chart-pie',
         link : '/example'
     },
     {
-        id   : 'order',
+        id   : 'order.id',
         title: 'Order',
         type : 'basic',
         icon : 'heroicons_outline:chart-pie',
         link : '/order'
     },
     {
-        id   : 'sale',
+        id   : 'sale.id',
         title: 'Sale',
         type : 'basic',
         icon : 'heroicons_outline:chart-pie',
         link : '/sales'
     },
     {
-        id   : 'invoice',
+        id   : 'invoice.id',
         title: 'Invoice',
         type : 'basic',
         icon : 'heroicons_outline:chart-pie',
         link : '/invoice'
     },
     {
-        id   : 'setting',
+        id   : 'setting.id',
         title: 'Setting',
         type : 'collapsable',
-        icon : 'heroicons_outline:chart-pie',
+        icon : 'heroicons_outline:cog-8-tooth',
         link : '/setting',
         children: [
             {
-                id   : 'products',
+                id   : 'setting.products.id',
                 title: 'Products',
                 type : 'basic',
                 icon : 'heroicons_outline:chart-pie',
-                link : '/products'
+                link : '/setting/products'
+            }, 
+            {
+                id   : 'setting.category.id',
+                title: 'Category',
+                type : 'basic',
+                icon : 'heroicons_outline:chart-pie',
+                link : '/setting/category'
+            }, 
+            {
+                id   : 'setting.brand.id',
+                title: 'Brand',
+                type : 'basic',
+                icon : 'heroicons_outline:chart-pie',
+                link : '/setting/brand'
+            }, 
+            {
+                id   : 'setting.unid.id',
+                title: 'Unid',
+                type : 'basic',
+                icon : 'heroicons_outline:chart-pie',
+                link : '/setting/unid'
             }, 
         ]
     }

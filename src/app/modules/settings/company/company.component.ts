@@ -113,8 +113,8 @@ export class CompanyComponent implements OnInit {
   initForm() {
     this.selectedCompanyForm = this._formBuilder.group({
         _id              : ['-1'],
-        comercialName    : ['', [Validators.required, Validators.minLength(2), FuseUtilsService.sinEspaciosEnBlanco]],
-        ruc              : ['', [Validators.required, Validators.minLength(11),  Validators.maxLength(11), FuseUtilsService.sinEspaciosEnBlanco]],
+        comercialName    : ['', [Validators.required, Validators.minLength(2), FuseUtilsService.withoutBlankSpaces]],
+        ruc              : ['', [Validators.required, Validators.minLength(11),  Validators.maxLength(11), FuseUtilsService.withoutBlankSpaces]],
         department       : ['',[Validators.required]],
         province         : ['',[Validators.required]],
         district         : ['',[Validators.required]],

@@ -134,8 +134,8 @@ export class PaymentDeadlineComponent implements OnInit {
   initForm() {
     this.selectedPaymentDeadlineForm = this._formBuilder.group({
         _id               : ['-1'],
-        description      : ['', [Validators.required, Validators.minLength(2),  FuseUtilsService.sinEspaciosEnBlanco]],
-        days             : ['',[Validators.required, Validators.minLength(1),  FuseUtilsService.sinEspaciosEnBlanco]]
+        description      : ['', [Validators.required, Validators.minLength(2),  FuseUtilsService.withoutBlankSpaces]],
+        days             : ['',[Validators.required, Validators.minLength(1),  FuseUtilsService.withoutBlankSpaces]]
     });
   }
 
