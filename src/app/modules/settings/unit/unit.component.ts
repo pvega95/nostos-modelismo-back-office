@@ -10,8 +10,8 @@ import {
 } from '@angular/forms';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
-import { Unid } from 'app/models/unid';
-import { UnidService } from './unid.service';
+import { Unit } from 'app/models/unit';
+import { UnitService } from './unit.service';
 import { FuseUtilsService } from '@fuse/services/utils';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { MatButtonModule } from '@angular/material/button';
@@ -37,10 +37,12 @@ import { NgApexchartsModule } from 'ng-apexcharts';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { debounceTime, Subject, switchMap, takeUntil } from 'rxjs';
 import { parseStringWithoutAccents } from 'app/utils/form';
+import { DatePipe } from '@angular/common';
+import { IUnitBody } from './interfaces';
 
 @Component({
-    selector: 'app-unid',
-    templateUrl: './unid.component.html',
+    selector: 'app-unit',
+    templateUrl: './unit.component.html',
     standalone: true,
     imports: [
         RouterModule,
@@ -77,6 +79,7 @@ import { parseStringWithoutAccents } from 'app/utils/form';
         ReactiveFormsModule,
         MatProgressSpinnerModule,
     ],
+    providers: [DatePipe],
     styles: [
         /* language=SCSS */
         `
@@ -99,25 +102,25 @@ import { parseStringWithoutAccents } from 'app/utils/form';
     ],
     animations: fuseAnimations,
 })
-export class UnidComponent implements OnInit, OnDestroy {
-    public unids: Unid[] = [];
+export class UnitComponent implements OnInit, OnDestroy {
+    public units: Unit[] = [];
     public isLoading: boolean;
     searchInputControl: FormControl = new FormControl();
-    unidsFiltered: any[] = [];
-    selectedUnid: any = null;
-    selectedUnidForm: FormGroup;
+    unitsFiltered: any[] = [];
+    selectedUnit: any = null;
+    selectedUnitForm: FormGroup;
 
     seeMessage: boolean = false;
     successMessage: string;
     flashMessage: boolean;
-    canDisableButtonAddNewUnid: boolean = false;
+    canDisableButtonAddNewUnit: boolean = false;
 
     private _unsubscribeAll: Subject<void> = new Subject<void>();
     constructor(
-        private  fuseUtilsService: FuseUtilsService,
-        private unidService: UnidService,
+        private unitService: UnitService,
         private _formBuilder: FormBuilder,
         private _fuseConfirmationService: FuseConfirmationService,
+        private datePipe: DatePipe
     ) {}
 
     ngOnDestroy(): void {
@@ -127,7 +130,7 @@ export class UnidComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.initForm();
-        this.loadListUnid();
+        this.loadListUnit();
         this.searchInputControl.valueChanges
         .pipe(
             takeUntil(this._unsubscribeAll),
@@ -136,29 +139,29 @@ export class UnidComponent implements OnInit, OnDestroy {
                 this.closeDetails();
                 this.isLoading = true;
                 const query = (queryInput as string).toLowerCase();
-                 this.unidsFiltered = this.unids.filter(
-                    (unid) => {
+                 this.unitsFiltered = this.units.filter(
+                    (unit) => {
                         return (
                             parseStringWithoutAccents(
-                            (unid.description as string)
+                            (unit.description as string)
                                 .toLowerCase())
                                 .match(query) ||
                                 parseStringWithoutAccents(
-                            (unid.abreviation as string)
+                            (unit.abreviation as string)
                                 .toLowerCase())
                                 .match(query)
                         );
                     }
                 );
                 this.isLoading = false;
-                return this.unidsFiltered;
+                return this.unitsFiltered;
             })
         )
         .subscribe();
     }
 
-    createUnid(): void {
-        this.unids.unshift({
+    createUnit(): void {
+        this.units.unshift({
             _id: '-1',
             description: 'Nueva unidad',
             abreviation: '',
@@ -166,7 +169,7 @@ export class UnidComponent implements OnInit, OnDestroy {
             createdAt: '',
             updatedAt: '',
         });
-        this.selectedUnid = {
+        this.selectedUnit = {
             _id: '-1',
             description: 'Nueva unidad',
             abreviation: '',
@@ -174,7 +177,7 @@ export class UnidComponent implements OnInit, OnDestroy {
             createdAt: '',
             updatedAt: '',
         };
-        this.selectedUnidForm.patchValue({
+        this.selectedUnitForm.patchValue({
             id: '-1',
             description: '',
             abreviation: '',
@@ -182,31 +185,27 @@ export class UnidComponent implements OnInit, OnDestroy {
             createdAt: '',
             updatedAt: '',
         });
-        this.unidsFiltered = this.unids;
-        this.canDisableButtonAddNewUnid = true;
+        this.unitsFiltered = this.units;
+        this.canDisableButtonAddNewUnit = true;
         this.searchInputControl.setValue('',{emitEvent: false});
     }
 
-    formatoFecha(fecha: string): string{
-        return  fecha !== '' ? this.fuseUtilsService.formatDate(this.fuseUtilsService.stringToDate(fecha)) : ''
-      }
-
-    loadListUnid(): void {
-        this.canDisableButtonAddNewUnid = false;
+    loadListUnit(): void {
+        this.canDisableButtonAddNewUnit = false;
         this.isLoading = true;
-        this.unidService.getListUnid().subscribe((resp) => {
+        this.unitService.getListUnit().subscribe((resp) => {
             if (resp.ok) {
-                this.unids = resp.data;
-                this.unidsFiltered = this.unids;
+                this.units = resp.data;
+                this.unitsFiltered = this.units;
                 this.isLoading = false;
             }
         });
     }
 
-    toggleDetails(unidId: string): void {
-        // If the unid is already selected...
-        if (this.selectedUnid) {
-            if (this.selectedUnid._id === unidId) {
+    toggleDetails(unitId: string): void {
+        // If the unit is already selected...
+        if (this.selectedUnit) {
+            if (this.selectedUnit._id === unitId) {
                 // Close the details
                 this.closeDetails();
                 return;
@@ -214,40 +213,33 @@ export class UnidComponent implements OnInit, OnDestroy {
         }
         this.successMessage = '';
         this.seeMessage = false;
-        // Get the unid by id
-        const unidIdFound =
-            this.unids.find((item: Unid) => item._id === unidId) || null;
-        this.selectedUnid = unidIdFound;
-        if (unidIdFound._id) {
-            this.selectedUnidForm.patchValue({
-                id: unidIdFound._id,
-                description: unidIdFound.description,
-                abreviation: unidIdFound.abreviation,
-                status: unidIdFound.status,
-                createdAt: unidIdFound.createdAt !== ''
-                ? this.fuseUtilsService.formatDate(
-                      this.fuseUtilsService.stringToDate(
-                        unidIdFound.createdAt
-                      )
-                  )
+        // Get the unit by id
+        const unitIdFound =
+            this.units.find((item: Unit) => item._id === unitId) || null;
+        this.selectedUnit = unitIdFound;
+
+        if (unitIdFound._id) {
+            this.selectedUnitForm.patchValue({
+                id: unitIdFound._id,
+                description: unitIdFound.description,
+                abreviation: unitIdFound.abreviation,
+                status: unitIdFound.status,
+                createdAt: unitIdFound.createdAt !== ''
+                ? this.datePipe.transform(unitIdFound.createdAt,'dd/MM/yyyy')
                 : '',
-                updatedAt: unidIdFound.updatedAt !== ''
-                ? this.fuseUtilsService.formatDate(
-                      this.fuseUtilsService.stringToDate(
-                        unidIdFound.updatedAt
-                      )
-                  )
+                updatedAt: unitIdFound.updatedAt !== ''
+                ? this.datePipe.transform(unitIdFound.updatedAt,'dd/MM/yyyy')
                 : '',
             });
         }
     }
 
     closeDetails(): void {
-        this.selectedUnid = null;
+        this.selectedUnit = null;
     }
 
     initForm(): void {
-        this.selectedUnidForm = this._formBuilder.group({
+        this.selectedUnitForm = this._formBuilder.group({
             id: [''],
             description: ['',
                 [Validators.required, FuseUtilsService.withoutBlankSpaces],
@@ -257,14 +249,15 @@ export class UnidComponent implements OnInit, OnDestroy {
             createdAt: [''],
             updatedAt: [''],
         });
-        this.selectedUnidForm.controls.createdAt.disable();
-        this.selectedUnidForm.controls.updatedAt.disable();
+        this.selectedUnitForm.controls.createdAt.disable();
+        this.selectedUnitForm.controls.updatedAt.disable();
     }
 
     createNewUnit(): void {
         this.isLoading = true;
-        const unid = this.selectedUnidForm.value;
-        this.unidService.createUnid(unid).subscribe((resp) => {
+        const unit = this.selectedUnitForm.value as IUnitBody;
+
+        this.unitService.createUnit(unit).subscribe((resp) => {
             this.flashMessage = resp.ok;
             this.seeMessage = true;
             if (resp.ok) {
@@ -275,17 +268,17 @@ export class UnidComponent implements OnInit, OnDestroy {
                     this.seeMessage = false;
                 }, 2000);
                 setTimeout(() => {
-                    this.loadListUnid();
+                    this.loadListUnit();
                     this.closeDetails();
                 }, 1000);
             }
         });
     }
 
-    updateselectedUnid(id: string): void {
+    updateselectedUnit(id: string): void {
         this.isLoading = true;
-        const unid = this.selectedUnidForm.value;
-        this.unidService.editUnid(id, unid).subscribe((resp) => {
+        const unit = this.selectedUnitForm.value as IUnitBody;
+        this.unitService.editUnit(id, unit).subscribe((resp) => {
             this.flashMessage = resp.ok;
             this.seeMessage = true;
             if (resp.ok) {
@@ -296,14 +289,14 @@ export class UnidComponent implements OnInit, OnDestroy {
                     this.seeMessage = false;
                 }, 2000);
                 setTimeout(() => {
-                    this.loadListUnid();
+                    this.loadListUnit();
                     this.closeDetails();
                 }, 1000);
             }
         });
     }
 
-    deleteselectedUnid(id: string): void {
+    deleteselectedUnit(id: string): void {
         const confirmation = this._fuseConfirmationService.open({
             title: 'Eliminar unidad',
             message:
@@ -318,7 +311,7 @@ export class UnidComponent implements OnInit, OnDestroy {
         confirmation.afterClosed().subscribe((result) => {
             if (result === 'confirmed' ) {
               if(id !== '-1'){
-                this.unidService.deleteUnid(id).subscribe((resp) => {
+                this.unitService.deleteUnit(id).subscribe((resp) => {
                   this.flashMessage = resp.ok;
                   this.seeMessage = true;
                   if (resp.ok) {
@@ -329,17 +322,17 @@ export class UnidComponent implements OnInit, OnDestroy {
                           this.seeMessage = false;
                       }, 2000);
                       setTimeout(() => {
-                          this.loadListUnid();
+                          this.loadListUnit();
                           this.closeDetails();
                       }, 1000);
                   }
               });
               } else {
-                // Find the index of the deleted unid
-                const index = this.unids.findIndex(item => item._id === id);
-                this.canDisableButtonAddNewUnid = false;
-                // Delete the unid
-                this.unids.splice(index, 1);
+                // Find the index of the deleted unit
+                const index = this.units.findIndex(item => item._id === id);
+                this.canDisableButtonAddNewUnit = false;
+                // Delete the unit
+                this.units.splice(index, 1);
               }
             }
         });

@@ -1,15 +1,15 @@
-export interface IUnidResponse {
+export interface IUnitResponse {
     ok: boolean;
     message: string;
-    data: IDataUnid[];
+    data: IDataUnit[];
 }
-export interface IUnidResponseEditDelete {
+export interface IUnitResponseEditDelete {
     ok: boolean;
     message: string;
     data: number;
 }
 
-export interface IDataUnid {
+export interface IDataUnit {
     _id: string;
    description: string;
    abreviation: string;
