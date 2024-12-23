@@ -80,6 +80,7 @@ export const appRoutes: Route[] = [
             {path: 'setting', children: [
 
                    {path: 'brand', loadChildren: () => import('app/modules/settings/brand/brand.routes')},
+                   {path: 'unit', loadChildren: () => import('app/modules/settings/unit/unit.routes')},
                   
              ]}
         ]

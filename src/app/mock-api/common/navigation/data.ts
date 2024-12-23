@@ -59,11 +59,11 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 link : '/setting/brand'
             }, 
             {
-                id   : 'setting.unid.id',
-                title: 'Unid',
+                id   : 'setting.unit.id',
+                title: 'Unit',
                 type : 'basic',
                 icon : 'heroicons_outline:chart-pie',
-                link : '/setting/unid'
+                link : '/setting/unit'
             }, 
         ]
     }
