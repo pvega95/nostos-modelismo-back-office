@@ -61,11 +61,11 @@
                                 </div>
                                 <!-- creation date -->
                                 <div class="truncate">
-                                    {{formatoFecha(brand.createdAt)}}
+                                    {{brand.createdAt | date:'dd/MM/yyyy' }}
                                 </div>
                                 <!-- update date -->
                                 <div class="truncate">
-                                    {{formatoFecha(brand.updatedAt)}}
+                                    {{brand.updatedAt | date:'dd/MM/yyyy' }}
                                 </div>
 
                                 <!-- Details button -->
