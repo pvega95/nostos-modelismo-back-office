@@ -30,12 +30,13 @@ import { TranslocoModule } from '@ngneat/transloco';
 import { IMaskModule } from 'angular-imask';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { ScrollingModule } from '@angular/cdk/scrolling';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+import { IBrandBody } from './interfaces';
 
 @Component({
     selector: 'app-brand',
@@ -76,6 +77,7 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
         ReactiveFormsModule,
         MatProgressSpinnerModule,
     ],
+    providers: [DatePipe],
     styles: [
         /* language=SCSS */
         `
@@ -113,10 +115,10 @@ export class BrandComponent implements OnInit {
 
     private _unsubscribeAll: Subject<void> = new Subject<void>();
     constructor(
-        private  fuseUtilsService: FuseUtilsService,
         private  brandService: BrandService,
         private  _formBuilder: FormBuilder,
         private  _fuseConfirmationService: FuseConfirmationService,
+        private datePipe: DatePipe
     ) {}
 
     ngOnDestroy(): void {
@@ -187,10 +189,6 @@ export class BrandComponent implements OnInit {
         this.searchInputControl.setValue('',{emitEvent: false});
     }
 
-    formatoFecha(fecha: string): string{
-        return  fecha !== '' ? this.fuseUtilsService.formatDate(this.fuseUtilsService.stringToDate(fecha)) : ''
-      }
-
     loadListBrand(): void {
         this.canDisableButtonAddNewBrand = false;
         this.isLoading = true;
@@ -224,18 +222,10 @@ export class BrandComponent implements OnInit {
                 description: brandFounded.description,
                 abreviation: brandFounded.abreviation,
                 createdAt: brandFounded.createdAt !== ''
-                ? this.fuseUtilsService.formatDate(
-                      this.fuseUtilsService.stringToDate(
-                        brandFounded.createdAt
-                      )
-                  )
+                ? this.datePipe.transform(brandFounded.createdAt,'dd/MM/yyyy')
                 : '',
                 updatedAt: brandFounded.updatedAt !== ''
-                ? this.fuseUtilsService.formatDate(
-                      this.fuseUtilsService.stringToDate(
-                        brandFounded.updatedAt
-                      )
-                  )
+                ?  this.datePipe.transform(brandFounded.updatedAt,'dd/MM/yyyy')
                 : '',
             });
         }
@@ -261,7 +251,7 @@ export class BrandComponent implements OnInit {
 
     createNewBrand(): void {
         this.isLoading = true;
-        const brand = this.selectedBrandForm.value;
+        const brand = this.selectedBrandForm.value as IBrandBody;
         this.brandService.createBrand(brand).subscribe((resp) => {
             this.flashMessage = resp.ok;
             this.seeMessage = true;
@@ -282,7 +272,7 @@ export class BrandComponent implements OnInit {
 
     updateSelectedBrand(id: string): void {
         this.isLoading = true;
-        const brand = this.selectedBrandForm.value;
+        const brand = this.selectedBrandForm.value as IBrandBody;
         this.brandService.editBrand(id, brand).subscribe((resp) => {
             this.flashMessage = resp.ok;
             this.seeMessage = true;
