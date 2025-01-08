@@ -14,25 +14,25 @@ export class CategoryService {
 
   constructor(private readonly _http: HttpClient) {}
 
-  getListBrand(): Observable<any> {
-    const query = `${CategoryService.BASE_URL}/${CategoryService.configManagement}/brand`;
+  getListCategory(): Observable<any> {
+    const query = `${CategoryService.BASE_URL}/${CategoryService.configManagement}`;
     return this._http.get<any>(query);
   }
 
-  createBrand(body: any): Observable<any> {
-    const query = `${CategoryService.BASE_URL}/${CategoryService.configManagement}/brand`;
+  createCategory(body: any): Observable<any> {
+    const query = `${CategoryService.BASE_URL}/${CategoryService.configManagement}`;
     const data = body;
     return this._http.post<any>(query, data);
   }
 
-  editBrand(id: string, body: any): Observable<any> {
-    const query = `${CategoryService.BASE_URL}/${CategoryService.configManagement}/brand/${id}`;
+  editCategory(id: string, body: any): Observable<any> {
+    const query = `${CategoryService.BASE_URL}/${CategoryService.configManagement}/${id}`;
     const data = body;
     return this._http.put<any>(query, data);
   }
 
-  deleteBrand(id: string): Observable<any> {
-    const query = `${CategoryService.BASE_URL}/${CategoryService.configManagement}/brand/${id}`;
+  deleteCategory(id: string): Observable<any> {
+    const query = `${CategoryService.BASE_URL}/${CategoryService.configManagement}/${id}`;
     return this._http.delete<any>(query);
   }
 
