@@ -101,21 +101,21 @@ import { IBrandBody } from './interfaces';
 
 })
 export class CategoryComponent implements OnInit {
-    public brands: Brand[] = [];
+    public categories: any[] = [];
     public isLoading: boolean;
     searchInputControl: FormControl = new FormControl();
-    brandsFiltered: Brand[] = [];
-    selectedBrand: any = null;
-    selectedBrandForm: FormGroup;
+    categoryFiltered: any[] = [];
+    selectedCategory: any = null;
+    selectedCategoryForm: FormGroup;
 
     seeMessage: boolean = false;
     successMessage: string;
     flashMessage: boolean;
-    canDisableButtonAddNewBrand: boolean = false;
+    canDisableButtonAddNewCategory: boolean = false;
 
     private _unsubscribeAll: Subject<void> = new Subject<void>();
     constructor(
-        private  brandService: CategoryService,
+        private  categoryService: CategoryService,
         private  _formBuilder: FormBuilder,
         private  _fuseConfirmationService: FuseConfirmationService,
         private datePipe: DatePipe
@@ -128,7 +128,7 @@ export class CategoryComponent implements OnInit {
 
     ngOnInit(): void {
         this.initForm();
-        this.loadListBrand();
+        this.loadListCategory();
         this.searchInputControl.valueChanges
         .pipe(
             takeUntil(this._unsubscribeAll),
@@ -137,7 +137,7 @@ export class CategoryComponent implements OnInit {
                 this.closeDetails();
                 this.isLoading = true;
                 const query = (queryInput as string).toLowerCase();
-                 this.brandsFiltered = this.brands.filter(
+                 this.categoryFiltered = this.categories.filter(
                     (unid) => {
                         return (
                             parseStringWithoutAccents(
@@ -152,50 +152,47 @@ export class CategoryComponent implements OnInit {
                     }
                 );
                 this.isLoading = false;
-                return this.brandsFiltered
+                return this.categoryFiltered
             })
         )
         .subscribe();
     }
 
-    createBrand(): void {
+    createCategory(): void {
 
-        this.brands.unshift({
+        this.categories.unshift({
             _id: '-1',
-            description: 'Nueva marca',
-            abreviation: '',
-            status: true,
+            name: '',
+            thumbnail: '',
             createdAt: '',
-            updatedAt: '',
+            updatedAt: ''
         });
-        this.selectedBrand = {
+        this.selectedCategory = {
             _id: '-1',
-            description: '',
-            abreviation: '',
-            status: true,
+            name: '',
+            thumbnail: '',
             createdAt: '',
-            updatedAt: '',
+            updatedAt: ''
         };
-        this.selectedBrandForm.patchValue({
+        this.selectedCategoryForm.patchValue({
             id: '-1',
-            description: '',
-            abreviation: '',
-            status: true,
+            name: '',
+            thumbnail: '',
             createdAt: '',
-            updatedAt: '',
+            updatedAt: ''
         });
-        this.brandsFiltered = this.brands;
-        this.canDisableButtonAddNewBrand = true;
+        this.categoryFiltered = this.categories;
+        this.canDisableButtonAddNewCategory = true;
         this.searchInputControl.setValue('',{emitEvent: false});
     }
 
-    loadListBrand(): void {
-        this.canDisableButtonAddNewBrand = false;
+    loadListCategory(): void {
+        this.canDisableButtonAddNewCategory = false;
         this.isLoading = true;
-        this.brandService.getListBrand().subscribe((resp) => {
+        this.categoryService.getListCategory().subscribe((resp) => {
             if (resp.ok) {
-                this.brands = resp.data;
-                this.brandsFiltered = this.brands;
+                this.categories = resp.data;
+                this.categoryFiltered = this.categories;
                 this.isLoading = false;
             }
         });
@@ -203,8 +200,8 @@ export class CategoryComponent implements OnInit {
 
     toggleDetails(brandId: string): void {
         // If the company is already selected...
-        if (this.selectedBrand) {
-            if (this.selectedBrand._id === brandId) {
+        if (this.selectedCategory) {
+            if (this.selectedCategory._id === brandId) {
                 // Close the details
                 this.closeDetails();
                 return;
@@ -213,46 +210,46 @@ export class CategoryComponent implements OnInit {
         this.successMessage = '';
         this.seeMessage = false;
         // Get the company by id
-        const brandFounded =
-            this.brands.find((item: Brand) => item._id === brandId) || null;
-        this.selectedBrand = brandFounded;
-        if (brandFounded._id) {
-            this.selectedBrandForm.patchValue({
-                id: brandFounded._id,
-                description: brandFounded.description,
-                abreviation: brandFounded.abreviation,
-                createdAt: brandFounded.createdAt !== ''
-                ? this.datePipe.transform(brandFounded.createdAt,'dd/MM/yyyy')
+        const categoryFounded =
+            this.categories.find((item: Brand) => item._id === brandId) || null;
+        this.selectedCategory = categoryFounded;
+        if (categoryFounded._id) {
+            this.selectedCategoryForm.patchValue({
+                id: categoryFounded._id,
+                name: categoryFounded.name,
+                thumbnail: categoryFounded.thumbnail,
+                createdAt: categoryFounded.createdAt !== ''
+                ? this.datePipe.transform(categoryFounded.createdAt,'dd/MM/yyyy')
                 : '',
-                updatedAt: brandFounded.updatedAt !== ''
-                ?  this.datePipe.transform(brandFounded.updatedAt,'dd/MM/yyyy')
+                updatedAt: categoryFounded.updatedAt !== ''
+                ?  this.datePipe.transform(categoryFounded.updatedAt,'dd/MM/yyyy')
                 : '',
             });
         }
     }
 
     closeDetails(): void {
-        this.selectedBrand = null;
+        this.selectedCategory = null;
     }
 
     initForm(): void {
-        this.selectedBrandForm = this._formBuilder.group({
+        this.selectedCategoryForm = this._formBuilder.group({
             id: [''],
-            description: ['',
+            name: ['',
                 [Validators.required, FuseUtilsService.withoutBlankSpaces],
             ],
-            abreviation: [''],
+            thumbnail: [''],
             createdAt: [''],
             updatedAt: [''],
         });
-        this.selectedBrandForm.controls.createdAt.disable();
-        this.selectedBrandForm.controls.updatedAt.disable();
+        this.selectedCategoryForm.controls.createdAt.disable();
+        this.selectedCategoryForm.controls.updatedAt.disable();
     }
 
-    createNewBrand(): void {
+    createNewCategory(): void {
         this.isLoading = true;
-        const brand = this.selectedBrandForm.value as IBrandBody;
-        this.brandService.createBrand(brand).subscribe((resp) => {
+        const brand = this.selectedCategoryForm.value as IBrandBody;
+        this.categoryService.createCategory(brand).subscribe((resp) => {
             this.flashMessage = resp.ok;
             this.seeMessage = true;
             if (resp.ok) {
@@ -263,20 +260,20 @@ export class CategoryComponent implements OnInit {
                     this.seeMessage = false;
                 }, 2000);
                 setTimeout(() => {
-                    this.loadListBrand();
+                    this.loadListCategory();
                     this.closeDetails();
                 }, 1000);
             }
         });
     }
 
-    updateSelectedBrand(id: string): void {
+    updateSelectedCategory(id: string): void {
         this.isLoading = true;
-        const brand = this.selectedBrandForm.value as IBrandBody;
-        this.brandService.editBrand(id, brand).subscribe((resp) => {
-            this.flashMessage = resp.ok;
+        const brand = this.selectedCategoryForm.value as IBrandBody;
+        this.categoryService.editCategory(id, brand).subscribe((resp) => {
+            this.flashMessage = resp.success;
             this.seeMessage = true;
-            if (resp.ok) {
+            if (resp.success) {
                 this.successMessage = resp.message;
                 this.isLoading = false;
                 setTimeout(() => {
@@ -284,18 +281,18 @@ export class CategoryComponent implements OnInit {
                     this.seeMessage = false;
                 }, 2000);
                 setTimeout(() => {
-                    this.loadListBrand();
+                    this.loadListCategory();
                     this.closeDetails();
                 }, 1000);
             }
         });
     }
 
-    deleteSelectedBrand(id: string): void {
+    deleteSelectedCategory(id: string): void {
         const confirmation = this._fuseConfirmationService.open({
-            title: 'Eliminar marca',
+            title: 'Eliminar categoria',
             message:
-                '¿Estás seguro(a) que quieres eliminar este marca?. Esta acción no puede deshacerse!',
+                '¿Estás seguro(a) que quieres eliminar este categoria?. Esta acción no puede deshacerse!',
             actions: {
                 confirm: {
                     label: 'Eliminar',
@@ -306,10 +303,10 @@ export class CategoryComponent implements OnInit {
         confirmation.afterClosed().subscribe((result) => {
             if (result === 'confirmed' ) {
               if(id !== '-1'){
-                this.brandService.deleteBrand(id).subscribe((resp) => {
-                  this.flashMessage = resp.ok;
+                this.categoryService.deleteCategory(id).subscribe((resp) => {
+                  this.flashMessage = resp.success;
                   this.seeMessage = true;
-                  if (resp.ok) {
+                  if (resp.success) {
                       this.successMessage = resp.message;
                       this.isLoading = false;
                       setTimeout(() => {
@@ -317,17 +314,17 @@ export class CategoryComponent implements OnInit {
                           this.seeMessage = false;
                       }, 2000);
                       setTimeout(() => {
-                          this.loadListBrand();
+                          this.loadListCategory();
                           this.closeDetails();
                       }, 1000);
                   }
               });
               } else {
                 // Find the index of the deleted brand
-                const index = this.brands.findIndex(item => item._id === id);
-                this.canDisableButtonAddNewBrand = false;
+                const index = this.categories.findIndex(item => item._id === id);
+                this.canDisableButtonAddNewCategory = false;
                 // Delete the brand
-                this.brands.splice(index, 1);
+                this.categories.splice(index, 1);
               }
             }
         });
