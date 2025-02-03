@@ -43,28 +43,35 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 type : 'basic',
                 icon : 'heroicons_outline:chart-pie',
                 link : '/setting/products'
-            }, 
+            },
             {
                 id   : 'setting.category.id',
                 title: 'Category',
                 type : 'basic',
                 icon : 'heroicons_outline:chart-pie',
                 link : '/setting/category'
-            }, 
+            },
             {
                 id   : 'setting.brand.id',
                 title: 'Brand',
                 type : 'basic',
                 icon : 'heroicons_outline:chart-pie',
                 link : '/setting/brand'
-            }, 
+            },
             {
                 id   : 'setting.unit.id',
                 title: 'Unit',
                 type : 'basic',
                 icon : 'heroicons_outline:chart-pie',
                 link : '/setting/unit'
-            }, 
+            },
+            {
+                id   : 'setting.client.id',
+                title: 'Client',
+                type : 'basic',
+                icon : 'heroicons_outline:chart-pie',
+                link : '/setting/client'
+            },
         ]
     }
 ];
