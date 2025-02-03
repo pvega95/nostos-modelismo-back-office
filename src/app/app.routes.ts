@@ -82,6 +82,7 @@ export const appRoutes: Route[] = [
                     { path: 'category', loadChildren: () => import('app/modules/settings/category/category.routes') },
                     { path: 'brand', loadChildren: () => import('app/modules/settings/brand/brand.routes') },
                     { path: 'unit', loadChildren: () => import('app/modules/settings/unit/unit.routes') },
+                    { path: 'client', loadChildren: () => import('app/modules/settings/client/client.routes') },
 
                 ]
             }
